@@ -8,6 +8,8 @@ const DashboardPage = () => {
     const navigate = useNavigate()
     const [toggleMenu, setToggleMenu] = useState(false)
 
+    const [dropdownToggle, setDropdownToggle] = useState(false)
+
     const { selectMenu ,setSelectMenu } = useContext(SelectContext)
 
 
@@ -22,6 +24,15 @@ const DashboardPage = () => {
 
     const handleToggleMenu = () => {
         setToggleMenu(!toggleMenu)
+    }
+
+    const handdleDropdownToggle = () => {
+        setDropdownToggle(!dropdownToggle)
+    }
+
+    const handleLogout = () => {
+        localStorage.removeItem("token_admin_binar")
+        navigate("/login")
     }
 
 
@@ -84,7 +95,16 @@ const DashboardPage = () => {
                                 <div className="flex items-center pl-5 gap-1 pr-5">
                                     <img src="luffy.jpeg" alt="" className="w-[40px] h-[40px] rounded-full cursor-pointer"/>
                                     <p className="text-sm">user 123</p>
-                                    <img src="fi_chevron-down.png" alt="" />
+                                <img src="fi_chevron-down.png" alt="" onClick={handdleDropdownToggle} className={`${dropdownToggle ? 'rotate-180' : ''} transition transition-timing-function: ease-in-out transition-duration: 0.5s`}/>
+                                {
+                                    dropdownToggle ? (
+                                        <div className="flex justify-center items-center w-[150px] h-[70px] rounded-sm bg-[#fdf7f7] absolute top-16 right-0 p-4">
+                                            <button 
+                                            onClick={handleLogout}
+                                            className="text-[#ffffff] font-medium p-2 bg-[#FA2C5A] rounded-lg">Logout</button>
+                                        </div>
+                                    ) : null
+                                }
                                 </div>
                             </div>
                             </div>
