@@ -4,6 +4,7 @@ import LoginPage from "../Pages/LoginPage/Index";
 import ProtectedPage from "./ProtectedPage";
 import AddCarPage from "../Pages/AddCar/Index";
 import EditCarPage from "../context/EditCar/Index";
+import TestPage from "../Pages/Test/Index";
 // import DeleteCarPage from "../DeleteCar/Index";
 
 export const RouteList = createBrowserRouter([
@@ -31,6 +32,10 @@ export const RouteList = createBrowserRouter([
             </ProtectedPage>
         ),
     }, 
+    {
+        path: "/test",
+        element: <TestPage />,
+    },
     {
         path: "/login",
         element: <LoginPage />,

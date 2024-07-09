@@ -49,3 +49,14 @@
   input[type=number] {
       -moz-appearance: textfield;
   }
+
+
+   /* Untuk browser webkit (Chrome, Safari, dll.) */
+   ::-webkit-scrollbar {
+    display: none;
+}
+
+/* Untuk Firefox */
+html {
+    scrollbar-width: none; /* Hilangkan bilah scroll di Firefox */
+}
