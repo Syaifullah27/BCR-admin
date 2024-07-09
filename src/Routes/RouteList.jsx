@@ -4,7 +4,7 @@ import LoginPage from "../Pages/LoginPage/Index";
 import ProtectedPage from "./ProtectedPage";
 import AddCarPage from "../Pages/AddCar/Index";
 import EditCarPage from "../context/EditCar/Index";
-import DeleteCarPage from "../DeleteCar/Index";
+// import DeleteCarPage from "../DeleteCar/Index";
 
 export const RouteList = createBrowserRouter([
     {
@@ -31,14 +31,6 @@ export const RouteList = createBrowserRouter([
             </ProtectedPage>
         ),
     }, 
-    {
-        path: "/delete-car",
-        element: (
-            <ProtectedPage>
-                <DeleteCarPage />
-            </ProtectedPage>
-        ),
-    },
     {
         path: "/login",
         element: <LoginPage />,

@@ -9,6 +9,12 @@ const DashboardPage = () => {
     const [toggleMenu, setToggleMenu] = useState(false)
 
     const [dropdownToggle, setDropdownToggle] = useState(false)
+    const [searchCar, setSearchCar] = useState("")
+
+
+    const handleSearchCar = (e) => {
+        setSearchCar(e.target.value)
+    }
 
     const { selectMenu ,setSelectMenu } = useContext(SelectContext)
 
@@ -40,9 +46,6 @@ const DashboardPage = () => {
         navigate("/edit-car")
     }
 
-    const navigateToDeleteCar = () => {
-        navigate("/delete-car")
-    }
 
 
     return (
@@ -87,9 +90,17 @@ const DashboardPage = () => {
                             <div className="flex">
                                 {
                                     selectMenu === "Dashboard" ? null : <>
-                                        <input type="text" className="border-[2px] bordder-[#999999] p-2 outline-none"
-                                        placeholder="Search"/>
-                                        <button className="border-[2px] border-[#0D28A6] text-[#0D28A6] font-medium p-2">Search</button>
+                                        <div className="relative">
+                                            <input 
+                                            onChange={handleSearchCar}
+                                            type="text" 
+                                            className="border-[2px] bordder-[#999999] p-2 outline-none placeholder:pl-8"
+                                            placeholder="Search"/>
+                                            <img src="fi_search.png" alt="" className={`absolute top-3 left-3 ${searchCar ? 'hidden' : ''}`}/>
+                                        </div>
+                                        <button className="border-[2px] border-[#0D28A6] text-[#0D28A6] font-medium p-2">
+                                            Search
+                                        </button>
                                     </>
                                 }
                                 <div className="flex items-center pl-5 gap-1 pr-5">
@@ -98,7 +109,7 @@ const DashboardPage = () => {
                                 <img src="fi_chevron-down.png" alt="" onClick={handdleDropdownToggle} className={`${dropdownToggle ? 'rotate-180' : ''} transition transition-timing-function: ease-in-out transition-duration: 0.5s`}/>
                                 {
                                     dropdownToggle ? (
-                                        <div className="flex justify-center items-center w-[150px] h-[70px] rounded-sm bg-[#fdf7f7] absolute top-16 right-0 p-4">
+                                        <div className="flex justify-center items-center w-[150px] h-[70px] rounded-sm bg-[#ffffff] absolute top-16 right-0 p-4">
                                             <button 
                                             onClick={handleLogout}
                                             className="text-[#ffffff] font-medium p-2 bg-[#FA2C5A] rounded-lg">Logout</button>
@@ -155,28 +166,28 @@ const DashboardPage = () => {
                                             </div>
 
                                             <div className="flex gap-4">
-                                                <label className={`bank-option cursor-pointer font-medium text-blue-700 ${selectCapacityCar === "All" ? "bg-[#CFD4ED] border-[1px] border-blue-900" : 'opacity-60'} border-[1px] border-blue-900 p-1 px-3 rounded-sm `}>
+                                                <label className={`bank-option cursor-pointer font-medium text-blue-700 ${selectCapacityCar === "All" ? "bg-[#CFD4ED] border-[1px] border-blue-900" : 'opacity-40'} border-[1px] border-blue-900 p-1 px-3 rounded-sm `}>
                                                     <input 
                                                     type="radio" 
                                                     value={"All"}
                                                     onChange={handleSelectCapacityCar}
                                                     checked={selectCapacityCar === "All"}/>
                                                 All</label>
-                                                <label className={`bank-option cursor-pointer font-medium text-blue-700 ${selectCapacityCar === "2-4" ? "bg-[#CFD4ED] border-[1px] border-blue-900" : 'opacity-60'} border-[1px] border-blue-900 p-1 px-3 rounded-sm `}>
+                                                <label className={`bank-option cursor-pointer font-medium text-blue-700 ${selectCapacityCar === "2-4" ? "bg-[#CFD4ED] border-[1px] border-blue-900" : 'opacity-40'} border-[1px] border-blue-900 p-1 px-3 rounded-sm `}>
                                                     <input 
                                                     type="radio" 
                                                     value={"2-4"}
                                                     onChange={handleSelectCapacityCar}
                                                     checked={selectCapacityCar === "2-4"}/>
                                                 2-4 people</label>
-                                                <label className={`bank-option cursor-pointer font-medium text-blue-700 ${selectCapacityCar === "4-6" ? "bg-[#CFD4ED] border-[1px] border-blue-900" : 'opacity-60'} border-[1px] border-blue-900 p-1 px-3 rounded-sm `}>
+                                                <label className={`bank-option cursor-pointer font-medium text-blue-700 ${selectCapacityCar === "4-6" ? "bg-[#CFD4ED] border-[1px] border-blue-900" : 'opacity-40'} border-[1px] border-blue-900 p-1 px-3 rounded-sm `}>
                                                     <input 
                                                     type="radio" 
                                                     value={"4-6"}
                                                     onChange={handleSelectCapacityCar}
                                                     checked={selectCapacityCar === "4-6"}/>
                                                 4-6 people</label>
-                                                <label className={`bank-option cursor-pointer font-medium text-blue-700 ${selectCapacityCar === "6-8" ? "bg-[#CFD4ED] border-[1px] border-blue-900" : 'opacity-60'} border-[1px] border-blue-900 p-1 px-3 rounded-sm `}>
+                                                <label className={`bank-option cursor-pointer font-medium text-blue-700 ${selectCapacityCar === "6-8" ? "bg-[#CFD4ED] border-[1px] border-blue-900" : 'opacity-40'} border-[1px] border-blue-900 p-1 px-3 rounded-sm `}>
                                                     <input 
                                                     type="radio" 
                                                     value={"6-8"}
@@ -204,7 +215,6 @@ const DashboardPage = () => {
                                                         </div>
                                                         <div className="flex gap-6 pt-4 pb-2">       
                                                                 <button 
-                                                                onClick={navigateToDeleteCar}
                                                                 className="border-2 border-[#FA2C5A] w-1/2 p-2 rounded-sm text-[#FA2C5A] font-medium flex gap-2 items-center justify-center">
                                                                 <img src="fi_trash-2.png" alt="" className=""/>
                                                                     Delete
