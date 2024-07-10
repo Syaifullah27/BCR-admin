@@ -185,7 +185,7 @@ const AddCarPage = () => {
                                                     type="text" 
                                                     placeholder="Upload Foto Mobil" 
                                                     className="outline-none border p-2 w-[350px] placeholder:text-sm placeholder:pl-2 text-sm  pl-2" />
-                                                    <p className="text-[#999999] text-[10px]">(masukan url)</p>
+                                                    <p className="text-[#999999] text-[10px] ml-2">(masukan url)</p>
                                                     <img src="fi_upload.png" alt="" className="absolute right-3 top-2"/>
                                                 </div>
                                                 <select 

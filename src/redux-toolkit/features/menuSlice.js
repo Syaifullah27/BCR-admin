@@ -1,16 +1,24 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import axios from "axios";
+// import { Searchcars } from "../../context/searchCars";
+// import { useContext } from "react";
 
 
-export const getMenu = createAsyncThunk("menu/getMenu", async (searchCar, page) => {
+
+
+// eslint-disable-next-line no-unused-vars
+export const getMenu = createAsyncThunk("menu/getMenu", async (search) => {
+    console.log('search', search);
+    // const { search, setSearch } = useContext(Searchcars)
+    // console.log('searchCar', search);
     const payload = {
         headers: {
             access_token: localStorage.getItem("token_admin_binar")
         }
     }
     try {
-        const response = await axios.get(`https://api-car-rental.binaracademy.org/admin/v2/car?name=${searchCar}&page=1&pageSize=9`, payload)
-        console.log('response', response.data.cars);
+        const response = await axios.get(`https://api-car-rental.binaracademy.org/admin/v2/car?name=${search}&page=1&pageSize=9`, payload)
+        console.log('response', response.data);
         return response.data.cars
     } catch (error) {
         return error.response.data

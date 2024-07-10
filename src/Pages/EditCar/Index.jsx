@@ -164,8 +164,8 @@ const EditCarPage = () => {
                                             <div className="flex flex-col gap-7 pt-1">
                                                 <p>Nama / Tipe Mobil</p>
                                                 <p>Harga</p>
-                                                <p>Foto</p>
-                                                <p>Kategori</p>
+                                                <p className="mt-1">Foto</p>
+                                                <p className="mt-5">Kategori</p>
                                             </div>
                                             <div className="flex flex-col gap-4">
                                                 <input
@@ -185,6 +185,7 @@ const EditCarPage = () => {
                                                         placeholder="Upload Foto Mobil"
                                                         className="outline-none border p-2 w-[350px] placeholder:text-sm placeholder:pl-2 text-sm  pl-2" />
                                                     <img src="fi_upload.png" alt="" className="absolute right-3 top-2" />
+                                                    <p className="text-[#999999] text-[10px] ml-2">(masukan url)</p>
                                                 </div>
                                                 <select
                                                     defaultValue={""}

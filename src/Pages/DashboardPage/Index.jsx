@@ -8,6 +8,7 @@ import { useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { getMenu } from "../../redux-toolkit/features/menuSlice"
 import { formatKategoryCars, formatRupiah, formatTanggalIndo } from "../../utils/formater"
+import { Searchcars } from "../../context/searchCars"
 
 const DashboardPage = () => {
     const dispatch = useDispatch()
@@ -15,12 +16,16 @@ const DashboardPage = () => {
     const [toggleMenu, setToggleMenu] = useState(false)
 
     const [dropdownToggle, setDropdownToggle] = useState(false)
-    const [searchCar, setSearchCar] = useState("")
     const [page, setPage] = useState(1)
+    // const [searchCar, setSearchCar] = useState("")
+    const { search, setSearch } = useContext(Searchcars)
+    // console.log(search);
+
+    
 
 
     const handleSearchCar = (e) => {
-        setSearchCar(e.target.value)
+        setSearch(e.target.value)
         // console.log(searchCar);
     }
 
@@ -71,8 +76,13 @@ const DashboardPage = () => {
     // console.log(menuReducer);
 
     useEffect(() => {
-        dispatch(getMenu(searchCar, page))
+        dispatch(getMenu(search))
     }, [])
+
+    const handleSearch = (e) => {
+        e.preventDefault()
+        dispatch(getMenu(search))
+    }
 
 
     return (
@@ -121,11 +131,14 @@ const DashboardPage = () => {
                                             <input
                                                 onChange={handleSearchCar}
                                                 type="text"
+                                                value={search}
                                                 className="border-[2px] bordder-[#999999] p-2 outline-none placeholder:pl-8"
                                                 placeholder="Search" />
-                                            <img src="fi_search.png" alt="" className={`absolute top-3 left-3 ${searchCar ? 'hidden' : ''}`} />
+                                            <img src="fi_search.png" alt="" className={`absolute top-3 left-3 ${search ? 'hidden' : ''}`} />
                                         </div>
-                                        <button className="border-[2px] border-[#0D28A6] text-[#0D28A6] font-medium p-2">
+                                        <button 
+                                        onClick={handleSearch}
+                                        className="border-[2px] border-[#0D28A6] text-[#0D28A6] font-medium p-2">
                                             Search
                                         </button>
                                     </>
