@@ -9,8 +9,14 @@ import { useDispatch } from "react-redux"
 import { getMenu } from "../../redux-toolkit/features/menuSlice"
 import { formatKategoryCars, formatRupiah, formatTanggalIndo } from "../../utils/formater"
 import { Searchcars } from "../../context/searchCars"
+import "chart.js/auto"
+import Chart from 'react-apexcharts'
+import axios from "axios"
 
 const DashboardPage = () => {
+
+
+
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [toggleMenu, setToggleMenu] = useState(false)
@@ -83,6 +89,164 @@ const DashboardPage = () => {
         e.preventDefault()
         dispatch(getMenu(search))
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    const [dateFrom, setDateFrom] = useState('')
+    const [dateUntil, setDateUntil] = useState('')
+
+
+    const getReportData = async () => {
+        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGJjci5pbyIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTcxODg5MDY2MH0.WLWnMOa5rwS7RVe1zdPMrSnn2-jbpRKjnoO-44YhIDw'
+        const config = {
+            headers: {
+                access_token: `${token}`,
+            },
+        }
+        try {
+            const res = await axios.get(`https://api-car-rental.binaracademy.org/admin/order/reports?from=${dateFrom}&until=${dateUntil}`, config)
+            setDataReports(res.data)
+            console.log(res.data);
+        } catch (error) {
+            console.log(error?.response);
+        }
+    }
+
+
+    useEffect(() => {
+        getReportData()
+    }, [])
+
+
+    const [dataReports, setDataReports] = useState([])
+
+    const day = dataReports.map((d) => {
+        return d.day
+    })
+
+    const countOrder = dataReports.map((c) => {
+        return c.orderCount
+    })
+
+    // console.log(countOrder);
+    // console.log(day)
+
+
+
+
+
+    const OptionsColumChart = {
+        series: [{
+            name: 'Count Order',
+            data: countOrder,
+        }],
+        options: {
+            chart: {
+                height: 350,
+                type: 'bar',
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 10,
+                    dataLabels: {
+                        position: 'top', // top, center, bottom
+                    },
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: function (val) {
+                    return val + "%";
+                },
+                offsetY: -30,
+                style: {
+                    fontSize: '12px',
+                    colors: ["#304758"]
+                }
+            },
+
+            xaxis: {
+                categories: day,
+                position: 'top',
+                axisBorder: {
+                    show: false
+                },
+                axisTicks: {
+                    show: false
+                },
+                crosshairs: {
+                    fill: {
+                        type: 'gradient',
+                        gradient: {
+                            colorFrom: '#D8E3F0',
+                            colorTo: '#BED1E6',
+                            stops: [0, 100],
+                            opacityFrom: 0.4,
+                            opacityTo: 0.5,
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                }
+            },
+            yaxis: {
+                axisBorder: {
+                    show: false
+                },
+                axisTicks: {
+                    show: false,
+                },
+                labels: {
+                    show: false,
+                    formatter: function (val) {
+                        return val + "%";
+                    }
+                }
+
+            },
+            title: {
+                text: 'Hasil Rental Bulanan',
+                floating: true,
+                offsetY: 330,
+                align: 'center',
+                style: {
+                    color: '#444'
+                }
+            }
+        },
+
+    }
+
+
+    
+
+    const handleGetDateFrom = (e) => {
+        setDateFrom(e.target.value)
+    }
+    const handleGetDateUntil = (e) => {
+        setDateUntil(e.target.value)
+    }
+
+
+
+
+
+
+
+
+
+
 
 
     return (
@@ -193,7 +357,28 @@ const DashboardPage = () => {
                                         </div>
                                         {/* // lanjutkan dari sini  */}
 
-                                        <p>test</p>
+                                        {/* <p>test</p> */}
+                                        <div className=" pt-10 gap-4 flex flex-col justify-center w-full">
+                                        <p className=" font-medium">Month</p>
+                                        <div className="flex gap-5">
+                                            <input type="date" value={dateFrom} onChange={handleGetDateFrom}/>
+                                            <input type="date" value={dateUntil} onChange={handleGetDateUntil}/>
+                                            <button className="bg-[#0D28A6] text-white p-2 font-medium rounded-lg px-5"
+                                            onClick={getReportData}> Go</button>
+                                        </div>
+                                        <div id="chart" className="w-full">
+                                            <Chart options={OptionsColumChart.options} series={OptionsColumChart.series} type="bar"  />
+                                        </div>
+                                        <div id="html-dist"></div>
+                                    </div>
+
+                                    <div className="pb-20">
+                                        <h1 className="text-xl font-bold">Dashboard</h1>
+                                        <div className="flex gap-2 items-center pt-5">
+                                            <span className="bg-[#0D28A6] w-[7px] h-[25px]"></span>
+                                            <h1 className="text-lg font-semibold ">List Order</h1>
+                                        </div>
+                                    </div>
 
                                     </div>
                                     :
