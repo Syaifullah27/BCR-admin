@@ -339,7 +339,7 @@ const DashboardPage = () => {
                                 </div>
                             ) : null
                         }
-                        <div className="w-full h-[100%] bg-[#f5f6ff]">
+                        <div className={`w-full bg-[#f5f6ff] ${menuReducer.menu.length === 0 ? 'h-screen' : 'h-[100%]'}`}>
                             <div className="flex gap-2 items-center pl-8 pt-5">
                                 <p className="font-medium text-lg">{selectMenu === "Dashboard" ? "Dashboard" : "Cars"}</p>
                                 <p className="font-bold text-2xl ">&gt;</p>
@@ -361,8 +361,14 @@ const DashboardPage = () => {
                                         <div className=" pt-10 gap-4 flex flex-col justify-center w-full">
                                         <p className=" font-medium">Month</p>
                                         <div className="flex gap-5">
-                                            <input type="date" value={dateFrom} onChange={handleGetDateFrom}/>
-                                            <input type="date" value={dateUntil} onChange={handleGetDateUntil}/>
+                                            <input type="date" 
+                                            value={dateFrom}
+                                            className="border px-2" 
+                                            onChange={handleGetDateFrom}/>
+                                            <input type="date" 
+                                            value={dateUntil} 
+                                            className="border px-2"
+                                            onChange={handleGetDateUntil}/>
                                             <button className="bg-[#0D28A6] text-white p-2 font-medium rounded-lg px-5"
                                             onClick={getReportData}> Go</button>
                                         </div>
@@ -423,26 +429,26 @@ const DashboardPage = () => {
                                         {/* <p>{selectCapacityCar}</p> */}
 
                                         <div className="pt-5 flex gap-10 flex-wrap">
-                                            {
-                                                menuReducer.menu.map((item, index) => {
-                                                    return (
-                                                        <div key={index} className="w-[351px]  bg-[#ffffff] shadow-md border rounded-md flex flex-col p-4 gap-4">
-                                                            <div className="w-full flex justify-center pt-6">
-                                                                <img src={item.image === null ? "noImage.jpg" : item.image}
-                                                                className="w-[270px] h-[160px] rounded-lg" />
+                                        {
+                                            menuReducer.menu === null ? <p className="text-center font-medium text-2xl ">Loading</p> : menuReducer.menu.length === 0 ? <p className="text-center font-medium text-2xl ">No Data</p> : menuReducer.menu.map((item, index) => {
+                                                return (
+                                                    <div key={index} className="w-[351px]  bg-[#ffffff] shadow-md border rounded-md flex flex-col p-4 gap-4">
+                                                        <div className="w-full flex justify-center pt-6">
+                                                            <img src={item.image === null ? "noImage.jpg" : item.image}
+                                                            className="w-[270px] h-[160px] rounded-lg" />
+                                                        </div>
+                                                        <div className="flex flex-col gap-3">
+                                                            <h1 className="text-lg font-medium">{item.name}</h1>
+                                                            <h1 className="text-lg font-semibold">{formatRupiah(item.price)} / hari</h1>
+                                                            <div className="flex gap-2 items-center">
+                                                                <img src="fi_users.png" alt="" />
+                                                                <p className="text-sm">{formatKategoryCars(item.category)}</p>
                                                             </div>
-                                                            <div className="flex flex-col gap-3">
-                                                                <h1 className="text-lg font-medium">{item.name}</h1>
-                                                                <h1 className="text-lg font-semibold">{formatRupiah(item.price)} / hari</h1>
-                                                                <div className="flex gap-2 items-center">
-                                                                    <img src="fi_users.png" alt="" />
-                                                                    <p className="text-sm">{formatKategoryCars(item.category)}</p>
-                                                                </div>
-                                                                <div className="flex gap-2 items-center">
-                                                                    <img src="fi_clock.png" alt="" />
-                                                                    <p className="text-sm">Update at {formatTanggalIndo(item.updatedAt)}</p>
-                                                                </div>
-                                                                <div className="flex gap-6 pt-4 pb-2">
+                                                            <div className="flex gap-2 items-center">
+                                                                <img src="fi_clock.png" alt="" />
+                                                                <p className="text-sm">Update at {formatTanggalIndo(item.updatedAt)}</p>
+                                                            </div>
+                                                            <div className="flex gap-6 pt-4 pb-2">
                                                                     <button
                                                                         className="border-2 border-[#FA2C5A] w-1/2 p-2 rounded-sm text-[#FA2C5A] font-medium flex gap-2 items-center justify-center">
                                                                         <img src="fi_trash-2.png" alt="" className="" />
@@ -455,21 +461,25 @@ const DashboardPage = () => {
                                                                         Edit
                                                                     </button>
                                                                 </div>
-                                                            </div>
                                                         </div>
-                                                    )
-                                                })
-                                            }
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                            
                                         </div>
-                                        <div className="flex gap-6 pt-20 pb-16 justify-center items-center">
-                                            <button 
-                                            onClick={handlePreviousPage}
-                                            className="border bg-white p-2 px-7 text-slate-900 font-medium rounded-lg shadow-md ">Prev</button>
-                                            <h1 className="text-slate-900 text-2xl font-medium">{page}</h1>
-                                            <button 
-                                            onClick={handleNextPage}
-                                            className="border bg-white p-2 px-7 text-slate-900 font-medium rounded-lg shadow-md ">Next</button>
+                                        {
+                                            menuReducer.menu.length === 0 ? null : 
+                                            <div className="flex gap-6 pt-20 pb-16 justify-center items-center">
+                                                <button 
+                                                onClick={handlePreviousPage}
+                                                className="border bg-white p-2 px-7 text-slate-900 font-medium rounded-lg shadow-md ">Prev</button>
+                                                <h1 className="text-slate-900 text-2xl font-medium">{page}</h1>
+                                                <button 
+                                                onClick={handleNextPage}
+                                                className="border bg-white p-2 px-7 text-slate-900 font-medium rounded-lg shadow-md ">Next</button>
                                         </div>
+                                        }
                                     </div>
                                 }
                             </div>

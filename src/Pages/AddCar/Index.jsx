@@ -3,17 +3,29 @@ import { useState } from "react"
 import { Link } from "react-router-dom"
 import { SelectContext } from "../../context/selectMenu"
 import { useNavigate } from "react-router-dom"
+import axios from "axios"
+import { useRef } from "react"
 
 const AddCarPage = () => {
     const navigate = useNavigate()
-
+    
     const [toggleMenu, setToggleMenu] = useState(false)
-    const [kapasitas, setKapasitas] = useState("")
-    const [searchCar, setSearchCar] = useState("")  
+    const [searchCar, setSearchCar] = useState("") 
+    const inputRef = useRef(null)
+    const [img, setImg] = useState(null)
+    const [image, setImage] = useState("")
+    
+    const [form, setForm] = useState({
+        name: "",
+        category : "",
+        price : "",
+        status: false,
+    });
+    
 
     // const [selectMenu, setSelectMenu] = useState('Cars')
     const [dropdownToggle, setDropdownToggle] = useState(false)
-
+    
 
     const { selectMenu, setSelectMenu } = useContext(SelectContext)
 
@@ -25,6 +37,7 @@ const AddCarPage = () => {
         setSearchCar(e.target.value)
     }
 
+
     const handdleDropdownToggle = () => {
         setDropdownToggle(!dropdownToggle)
     }
@@ -35,10 +48,56 @@ const AddCarPage = () => {
     }
 
 
-
-    const handleKapasitas = (e) => {
-        setKapasitas(e.target.value)
+    const handleImg = (e) => {
+        const file = e.target.files[0]
+        console.log(e.target.files[0]);
+        setImg(e.target.files[0])
+        setImage(URL.createObjectURL(file))
     }
+    
+
+
+    const handleForm = (e) => {  
+            setForm({
+                ...form,
+                [e.target.name]: e.target.value
+            })
+    }
+
+    const handleAddCar = async () => {
+
+        const formData = new FormData()
+        formData.append("name", form.name)
+        formData.append("category", form.category)
+        formData.append("price", parseInt(form.price))
+        formData.append("status", form.status)
+        formData.append("image", img)
+    
+        const config = {
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Content-Type": "multipart/form-data",
+                access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGJjci5pbyIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTY2NTI0MjUwOX0.ZTx8L1MqJ4Az8KzoeYU2S614EQPnqk6Owv03PUSnkzc"
+            }
+        }
+
+        // console.log(formData);
+        console.log(form.name,form.price,form.category);
+
+        try {
+            const res = await axios.post("https://api-car-rental.binaracademy.org/admin/car", formData, config)
+            console.log(res);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    
+    const handleImgClik = () => {
+        inputRef.current.click()
+    }
+
+
 
     const handleToggleMenu = () => {
         setToggleMenu(!toggleMenu)
@@ -170,29 +229,37 @@ const AddCarPage = () => {
                                             </div>
                                             <div className="flex flex-col gap-4">
                                                 <input 
-                                                name="nama/tipe mobil"
+                                                name="name"
                                                 type="text" 
+                                                onChange={handleForm}
                                                 placeholder="Input Nama / Tipe Mobil"
-                                                className="outline-none border p-2 w-[350px] placeholder:text-sm placeholder:pl-2 text-sm  pl-2"/>
+                                                className="outline-none border p-2 w-[380px] placeholder:text-sm placeholder:pl-2 text-sm  pl-2"/>
                                                 <input 
-                                                name="harga"
+                                                name="price"
                                                 type="number" 
+                                                onChange={handleForm}
                                                 placeholder="Input Harga Sewa Mobil"
-                                                className="outline-none border p-2 w-[350px] placeholder:text-sm placeholder:pl-2 text-sm  pl-2"/>
-                                                <div className="relative">
+                                                className="outline-none border p-2 w-[380px] placeholder:text-sm placeholder:pl-2 text-sm  pl-2"/>
+                                                <div className="relative border p-2 pl-4 w-[380px] h-14" onClick={handleImgClik}>
+                                                    {image ? <img src={image} alt="" className="w-10 h-10 border rounded-md"/> : <p className="text-[#949494] text-sm  absolute top-3 mt-1">Upload Foto Mobil</p>}
+                                                    {
+                                                        image ? <p className="text-[#1d1d20] text-sm  absolute top-3 mt-2 left-16">{img.name}</p> : null
+                                                    }
                                                     <input 
-                                                    name="foto"
-                                                    type="text" 
+                                                    name="img"
+                                                    ref={inputRef}
+                                                    type="file" 
+                                                    onChange={handleImg}
                                                     placeholder="Upload Foto Mobil" 
-                                                    className="outline-none border p-2 w-[350px] placeholder:text-sm placeholder:pl-2 text-sm  pl-2" />
-                                                    <p className="text-[#999999] text-[10px] ml-2">(masukan url)</p>
-                                                    <img src="fi_upload.png" alt="" className="absolute right-3 top-2"/>
+                                                    className="outline-none border p-2 w-[380px] placeholder:text-sm placeholder:pl-2 text-sm  pl-2 hidden" />
+                                                    {/* <p className="text-[#999999] text-[10px] ml-2 absolute top-4">(masukan url)</p> */}
+                                                    <img src="fi_upload.png" alt="" className="absolute right-3 top-4 w-6 "/>
                                                 </div>
                                                 <select 
                                                 defaultValue={""}
-                                                name="kategori" 
-                                                onChange={handleKapasitas}
-                                                className={`outline-none border p-2 w-[350px] ${kapasitas === "" ? "placeholder:text-sm placeholder:pl-2 text-sm text-gray-400" : ""}  ${kapasitas !== "" ? "appearance-none" : ""} text-sm  pl-3`}>
+                                                name="category" 
+                                                onChange={handleForm}
+                                                className={`outline-none border p-2 w-[380px] ${form.category === "" ? "placeholder:text-sm placeholder:pl-2 text-sm text-gray-400" : ""}  ${form.category !== "" ? "appearance-none" : ""} text-sm  pl-3`}>
                                                     <option value="" className="text-white font-medium bg-blue-600" >Pilih Kategori Mobil</option>
                                                     <option value="small" className="text-slate-900 font-medium">2 - 4 orang</option>
                                                     <option value="medium" className="text-slate-900 font-medium">4 - 6 orang</option>
@@ -211,7 +278,9 @@ const AddCarPage = () => {
                                     <button 
                                     onClick={handleBackToListCars}
                                     className="border-[1px] border-[#0D28A6] text-[#0D28A6] font-medium p-1 px-5">Cancel</button>
-                                    <button className="bg-[#0D28A6] text-white font-medium p-1 px-5">Save</button>
+                                    <button 
+                                    onClick={handleAddCar}
+                                    className="bg-[#0D28A6] text-white font-medium p-1 px-5">Save</button>
 
                                 </div>
                             </div>
