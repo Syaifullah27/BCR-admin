@@ -24,3 +24,22 @@ const PopupProvider = ({ children }) => {
 };
 
 export default PopupProvider;
+
+
+
+export const FormatMessage = (message) => {
+    if (message === "Data Berhasil Disimpan") {
+        return <div
+            className="fixed translate-x-[325px] top-20 flex justify-center items-center bg-[#73CA5C] p-2 rounded-sm w-[500px] font-medium text-lg text-[#ffffff]">{message}
+        </div>
+    } else if (message === "Data Berhasil DiEdit") {
+        return <div
+            className="fixed translate-x-[325px] top-20 flex justify-center items-center bg-[#f3ca44] p-2 rounded-sm w-[500px] font-medium text-lg text-[#ffffff]">{message}</div>
+    } else if (message === "Data Berhasil Dihapus") {
+        return <div
+            className="fixed translate-x-[325px] top-20 flex justify-center items-center bg-[#000000] p-2 rounded-sm w-[500px] font-medium text-lg text-[#ffffff]">{message}</div>
+    } else if (message === "Terjadi kesalahan saat menambahkan data mobil" || message === "Terjadi kesalahan saat mengedit data mobil" || message === "Terjadi kesalahan saat menghapus data mobil") {
+        return <div
+            className="fixed translate-x-[325px] top-20 flex justify-center items-center bg-[#ff3838] p-2 rounded-sm w-[500px] font-medium text-lg text-[#ffffff]">{message}</div>
+    }
+}

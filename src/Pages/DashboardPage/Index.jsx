@@ -12,7 +12,7 @@ import { Searchcars } from "../../context/searchCars"
 import "chart.js/auto"
 import Chart from 'react-apexcharts'
 import axios from "axios"
-import { PopupContext } from "../../context/messagePopup"
+import { FormatMessage, PopupContext } from "../../context/messagePopup"
 
 const DashboardPage = () => {
 
@@ -37,7 +37,7 @@ const DashboardPage = () => {
     }
 
     const { selectMenu, setSelectMenu } = useContext(SelectContext)
-    const { popupMessage, showPopup } = useContext(PopupContext);
+    const { popupMessage, showPopup, showPopupMessage } = useContext(PopupContext);
 
 
     const [selectCapacityCar, setSelectCapacityCar] = useState('All')
@@ -96,7 +96,25 @@ const DashboardPage = () => {
 
 
 
-
+    const handleDeleteCar = async (id) => {
+        // console.log(id);
+        const config = {
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Content-Type": "multipart/form-data",
+                access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGJjci5pbyIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTY2NTI0MjUwOX0.ZTx8L1MqJ4Az8KzoeYU2S614EQPnqk6Owv03PUSnkzc"
+            }
+        }
+        try {
+            const res = await axios.delete(`https://api-car-rental.binaracademy.org/admin/car/${id}`, config)
+            console.log(res);
+            showPopupMessage('Data Berhasil Dihapus');
+            getMenu()
+        } catch (error) {
+            console.log(error);
+            showPopupMessage('Terjadi kesalahan saat menghapus data mobil')
+        }
+    }
 
 
 
@@ -392,9 +410,12 @@ const DashboardPage = () => {
                                     <div className="">
                                         <div className="w-full flex justify-between items-center">
                                             <h1 className="text-xl font-semibold">List Cars</h1>
-                                            {showPopup && <div className={`fixed translate-x-[325px] top-20 flex justify-center items-center ${popupMessage === "Data Berhasil Disimpan" ? 'bg-[#73CA5C]' : 'bg-[#ffd448]'} p-2 rounded-sm w-[500px] font-medium text-lg text-[#ffffff]`}>
+                                            {/* {showPopup && <div className={`fixed translate-x-[325px] top-20 flex justify-center items-center ${popupMessage === "Data Berhasil Disimpan" ? 'bg-[#73CA5C]' : 'bg-[#f3ca44]'} p-2 rounded-sm w-[500px] font-medium text-lg text-[#ffffff]`}>
                                                 {popupMessage}
-                                            </div>}
+                                            </div>} */}
+                                            { 
+                                                showPopup && FormatMessage(popupMessage)
+                                            }
                                             <Link to={"/add-car"}>
                                                 <button className="bg-[#0D28A6] text-white p-2 font-medium">+{"  "} Add New Car</button>
                                             </Link>
@@ -454,6 +475,7 @@ const DashboardPage = () => {
                                                             </div>
                                                             <div className="flex gap-6 pt-4 pb-2">
                                                                     <button
+                                                                        onClick={() => handleDeleteCar(item.id)}
                                                                         className="border-2 border-[#FA2C5A] w-1/2 p-2 rounded-sm text-[#FA2C5A] font-medium flex gap-2 items-center justify-center">
                                                                         <img src="fi_trash-2.png" alt="" className="" />
                                                                         Delete

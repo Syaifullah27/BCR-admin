@@ -114,11 +114,11 @@ const EditCarPage = () => {
         try {
             const res = await axios.put(`https://api-car-rental.binaracademy.org/admin/car/${id}`, formData, config)
             console.log(res);
-            showPopupMessage('Data berhasil DiEdit');
+            showPopupMessage('Data Berhasil DiEdit');
                 navigate("/")
         } catch (error) {
             console.log(error);
-            showPopupMessage('Data gagal DiEdit');
+            showPopupMessage('Terjadi kesalahan saat mengedit data mobil');
         }
     }
 

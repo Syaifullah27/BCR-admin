@@ -106,7 +106,7 @@ const AddCarPage = () => {
             // setTimeout(() => setShowPopup(false), 3000);
         } catch (error) {
             console.log(error);
-            showPopupMessage('Terjadi kesalahan saat menambahkan data mobil.');
+            showPopupMessage('Terjadi kesalahan saat menambahkan data mobil');
             // setShowPopup(true);
             // setTimeout(() => setShowPopup(false), 3000);
         }
@@ -264,7 +264,7 @@ const AddCarPage = () => {
                                                 <div className="relative border p-2 pl-4 w-[380px] h-14" onClick={handleImgClik}>
                                                     {image ? <img src={image} alt="" className="w-10 h-10 border rounded-md"/> : <p className="text-[#949494] text-sm  absolute top-3 mt-1">Upload Foto Mobil</p>}
                                                     {
-                                                        image ? <p className="text-[#1d1d20] text-sm  absolute top-3 mt-2 left-16">{img.name}</p> : null
+                                                        image ? <p className="text-[#1d1d20] text-sm  absolute top-3 mt-2 left-16">{image.substring(0, 35)}...</p> : null
                                                     }
                                                     <input 
                                                     name="img"
