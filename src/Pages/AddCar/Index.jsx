@@ -5,6 +5,7 @@ import { SelectContext } from "../../context/selectMenu"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import { useRef } from "react"
+import { PopupContext } from "../../context/messagePopup"
 
 const AddCarPage = () => {
     const navigate = useNavigate()
@@ -14,6 +15,7 @@ const AddCarPage = () => {
     const inputRef = useRef(null)
     const [img, setImg] = useState(null)
     const [image, setImage] = useState("")
+    // const [showPopup, setShowPopup] = useState(false);
     
     const [form, setForm] = useState({
         name: "",
@@ -22,11 +24,20 @@ const AddCarPage = () => {
         status: false,
     });
     
-
-    // const [selectMenu, setSelectMenu] = useState('Cars')
-    const [dropdownToggle, setDropdownToggle] = useState(false)
     
-
+    // const handleMessage = (e) => {
+        //     const { name, value } = e.target;
+        //     setForm({ ...form, [name]: value });
+        // };
+        
+        
+        
+        // const [selectMenu, setSelectMenu] = useState('Cars')
+        const [dropdownToggle, setDropdownToggle] = useState(false)
+        
+        
+        // eslint-disable-next-line no-unused-vars
+        const { popupMessage, showPopupMessage, showPopup } = useContext(PopupContext);
     const { selectMenu, setSelectMenu } = useContext(SelectContext)
 
     const handleSelectMenu = (e) => {
@@ -62,6 +73,8 @@ const AddCarPage = () => {
                 ...form,
                 [e.target.name]: e.target.value
             })
+            const { name, value } = e.target;
+            setForm({ ...form, [name]: value });
     }
 
     const handleAddCar = async () => {
@@ -87,8 +100,15 @@ const AddCarPage = () => {
         try {
             const res = await axios.post("https://api-car-rental.binaracademy.org/admin/car", formData, config)
             console.log(res);
+            showPopupMessage('Data Berhasil Disimpan');
+            navigate("/")
+            // setShowPopup(true);
+            // setTimeout(() => setShowPopup(false), 3000);
         } catch (error) {
             console.log(error);
+            showPopupMessage('Terjadi kesalahan saat menambahkan data mobil.');
+            // setShowPopup(true);
+            // setTimeout(() => setShowPopup(false), 3000);
         }
     }
 
@@ -220,11 +240,12 @@ const AddCarPage = () => {
                                     :
                                     <div className="w-full flex flex-col justify-center">
                                         <h1 className="text-xl font-semibold">Add New Car</h1>
+                                        {/* {showPopup && <div className="popup">{popupMessage}</div>} */}
                                         <div className="w-full flex gap-20 bg-[#ffffff] mt-5 p-4">
                                             <div className="flex flex-col gap-7 pt-1">
                                                 <p>Nama / Tipe Mobil</p>
                                                 <p>Harga</p>
-                                                <p className="mt-1">Foto</p>
+                                                <p className="mt-3">Foto</p>
                                                 <p className="mt-5">Kategori</p>
                                             </div>
                                             <div className="flex flex-col gap-4">
@@ -253,7 +274,9 @@ const AddCarPage = () => {
                                                     placeholder="Upload Foto Mobil" 
                                                     className="outline-none border p-2 w-[380px] placeholder:text-sm placeholder:pl-2 text-sm  pl-2 hidden" />
                                                     {/* <p className="text-[#999999] text-[10px] ml-2 absolute top-4">(masukan url)</p> */}
-                                                    <img src="fi_upload.png" alt="" className="absolute right-3 top-4 w-6 "/>
+                                                    {
+                                                        img ? null : <img src="../../fi_upload.png" alt="" className="absolute right-3 top-4 w-6 "/>
+                                                    }
                                                 </div>
                                                 <select 
                                                 defaultValue={""}
@@ -279,6 +302,7 @@ const AddCarPage = () => {
                                     onClick={handleBackToListCars}
                                     className="border-[1px] border-[#0D28A6] text-[#0D28A6] font-medium p-1 px-5">Cancel</button>
                                     <button 
+                                    disabled={form.name === "" || form.price === "" || img === "" || form.category === "" ? true : false}
                                     onClick={handleAddCar}
                                     className="bg-[#0D28A6] text-white font-medium p-1 px-5">Save</button>
 

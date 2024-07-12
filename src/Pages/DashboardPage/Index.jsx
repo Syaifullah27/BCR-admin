@@ -12,6 +12,7 @@ import { Searchcars } from "../../context/searchCars"
 import "chart.js/auto"
 import Chart from 'react-apexcharts'
 import axios from "axios"
+import { PopupContext } from "../../context/messagePopup"
 
 const DashboardPage = () => {
 
@@ -36,6 +37,7 @@ const DashboardPage = () => {
     }
 
     const { selectMenu, setSelectMenu } = useContext(SelectContext)
+    const { popupMessage, showPopup } = useContext(PopupContext);
 
 
     const [selectCapacityCar, setSelectCapacityCar] = useState('All')
@@ -72,14 +74,16 @@ const DashboardPage = () => {
         setPage(page + 1)
     }
 
-    const navigateToEditCar = () => {
-        navigate("/edit-car")
-    }
+    // const navigateToEditCar = (id) => {
+    //     console.log(id);
+    //     navigate(`/edit-car/${id}`)
+    // }
 
 
     const { menuReducer } = useSelector(state => state)
 
-    // console.log(menuReducer);
+
+    console.log(menuReducer.menu);
 
     useEffect(() => {
         dispatch(getMenu(search))
@@ -246,9 +250,6 @@ const DashboardPage = () => {
 
 
 
-
-
-
     return (
         <div className="flex flex-col  overflow-x-hidden">
             <div className="w-screen  flex bg-[#0D28A6]">
@@ -391,6 +392,9 @@ const DashboardPage = () => {
                                     <div className="">
                                         <div className="w-full flex justify-between items-center">
                                             <h1 className="text-xl font-semibold">List Cars</h1>
+                                            {showPopup && <div className={`fixed translate-x-[325px] top-20 flex justify-center items-center ${popupMessage === "Data Berhasil Disimpan" ? 'bg-[#73CA5C]' : 'bg-[#ffd448]'} p-2 rounded-sm w-[500px] font-medium text-lg text-[#ffffff]`}>
+                                                {popupMessage}
+                                            </div>}
                                             <Link to={"/add-car"}>
                                                 <button className="bg-[#0D28A6] text-white p-2 font-medium">+{"  "} Add New Car</button>
                                             </Link>
@@ -455,7 +459,7 @@ const DashboardPage = () => {
                                                                         Delete
                                                                     </button>
                                                                     <button
-                                                                        onClick={navigateToEditCar}
+                                                                        onClick={() => navigate(`/edit-car/${item.id}`)}    
                                                                         className="border w-1/2 p-2 rounded-sm bg-[#5CB85F] text-[#ffffff] font-medium flex gap-2 items-center justify-center">
                                                                         <img src="fi_edit.png" alt="" />
                                                                         Edit

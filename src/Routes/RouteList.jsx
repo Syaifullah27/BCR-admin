@@ -25,7 +25,7 @@ export const RouteList = createBrowserRouter([
         ),
     },
     {
-        path: "/edit-car",
+        path: "/edit-car/:id",
         element: (
             <ProtectedPage>
                 <EditCarPage />
