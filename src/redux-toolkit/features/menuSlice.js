@@ -8,7 +8,9 @@ import axios from "axios";
 
 // eslint-disable-next-line no-unused-vars
 export const getMenu = createAsyncThunk("menu/getMenu", async (search) => {
-    console.log('search', search);
+
+    // console.log('search', search);
+    // console.log(page);
     // const { search, setSearch } = useContext(Searchcars)
     // console.log('searchCar', search);
     const payload = {
@@ -18,8 +20,8 @@ export const getMenu = createAsyncThunk("menu/getMenu", async (search) => {
     }
     try {
         const response = await axios.get(`https://api-car-rental.binaracademy.org/admin/v2/car?name=${search}&page=1&pageSize=9`, payload)
-        console.log('response', response.data);
-        return response.data.cars
+        console.log(response.data);
+        return response.data
     } catch (error) {
         return error.response.data
     }
@@ -30,8 +32,17 @@ export const getMenu = createAsyncThunk("menu/getMenu", async (search) => {
 const initialState = {
     menu: [],
     loading: false,
-    error: null
+    error: null,
+    pagination: {
+        page: 1,
+        pageSize: 10,
+        count: 0,
+        
+    }
 }
+
+
+
 
 const menuSlice = createSlice({
     name: 'menu',

@@ -32,7 +32,7 @@ export const FormatMessage = (message) => {
         return <div
             className="fixed translate-x-[325px] top-20 flex justify-center items-center bg-[#73CA5C] p-2 rounded-sm w-[500px] font-medium text-lg text-[#ffffff]">{message}
         </div>
-    } else if (message === "Data Berhasil DiEdit") {
+    } else if (message === "Data Berhasil Diedit") {
         return <div
             className="fixed translate-x-[325px] top-20 flex justify-center items-center bg-[#f3ca44] p-2 rounded-sm w-[500px] font-medium text-lg text-[#ffffff]">{message}</div>
     } else if (message === "Data Berhasil Dihapus") {
