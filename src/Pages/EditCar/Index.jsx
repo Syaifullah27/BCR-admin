@@ -25,6 +25,7 @@ const EditCarPage = () => {
     const inputRef = useRef(null)
     const [img, setImg] = useState(null)
     const [image, setImage] = useState("")
+    const [images, setImages] = useState(null)
 
     const [form, setForm] = useState({
         name: "",
@@ -106,7 +107,7 @@ const EditCarPage = () => {
         formData.append("category", form.category)
         formData.append("price", parseInt(form.price))
         formData.append("status", form.status)
-        formData.append("image", img)
+        formData.append("image", images)
 
         const config = {
             headers: {
@@ -148,6 +149,7 @@ const EditCarPage = () => {
         const file = e.target.files[0]
         console.log(e.target.files[0]);
         setImg(e.target.files[0].name)
+        setImages(e.target.files[0])
         console.log(e.target.files[0].name);
         setImage(URL.createObjectURL(file))
     }

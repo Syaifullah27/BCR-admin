@@ -20,6 +20,7 @@ const AddCarPage = () => {
     const [img, setImg] = useState(null)
     // eslint-disable-next-line no-unused-vars
     const [image, setImage] = useState("")
+    const [images, setImages] = useState(null)
     // const [showPopup, setShowPopup] = useState(false);
     // eslint-disable-next-line no-unused-vars
     const { search, setSearch } = useContext(Searchcars);
@@ -72,6 +73,7 @@ const AddCarPage = () => {
         setImg(e.target.files[0].name)
         console.log(e.target.files[0].name);
         setImage(URL.createObjectURL(file))
+        setImages(e.target.files[0])
     }
 
 
@@ -92,7 +94,7 @@ const AddCarPage = () => {
         formData.append("category", form.category)
         formData.append("price", parseInt(form.price))
         formData.append("status", form.status)
-        formData.append("image", img)
+        formData.append("image", images)
 
         const config = {
             headers: {
