@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import axios from "axios";
 import { formatKategoryCars, formatRupiah, formatTanggalIndo } from "../../utils/formater";
+import Pagination from "../../Components/Pagination";
 
 const CarPage = () => {
     const navigate = useNavigate();
@@ -54,7 +55,7 @@ const CarPage = () => {
 
 
     // Get List car
-    const { menuReducers } = useSelector((state) => state);
+    const { menuReducers} = useSelector((state) => state);
 
     useEffect(() => {
         dispatch(getMenu(search));
@@ -62,6 +63,8 @@ const CarPage = () => {
     console.log(menuReducers);
 
 
+    // if (status === 'loading') return <div>Loading...</div>;
+    // if (status === 'failed') return <div>Error: {error}</div>;
 
 
     // Delete Car
@@ -128,13 +131,15 @@ const CarPage = () => {
                 <div className="w-full bg-[#ffffff] shadow-md h-max p-3 flex ">
                     <h1 className="bg-[#CFD4ED] p-2 px-6 w-max">Logo</h1>
                     <div className="w-full ml-40 flex justify-between items-center">
-                        <img
-                            src="hamburger-menu.png"
-                            alt=""
-                            onClick={handleToggleMenu}
-                            className={`w-[33px] h-[33px] mt-1 cursor-pointer ${toggleMenu ? "rotate-90" : ""
-                                } transition transition-timing-function: ease-in-out transition-duration: 0.5s`}
-                        />
+                       {/* Hamburger menu Toggle */}
+                        <div className=" ">
+                            <div className="menu-toggle" onClick={handleToggleMenu}>
+                            <input type="checkbox" />
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            </div>
+                        </div>
                         <div className="flex">
                             <>
                                 <div className="relative">
@@ -299,7 +304,7 @@ const CarPage = () => {
                                     return (
                                         <div key={index} className="w-[351px]  bg-[#ffffff] shadow-md border rounded-md flex flex-col p-4 gap-4">
                                             <div className="w-full flex justify-center pt-6">
-                                                <img src={item.image} alt="" className="w-[270px] h-[160px] rounded-lg" />
+                                                <img src={item.image ? item.image : "noImage.jpg"} alt="" className="w-[270px] h-[160px] rounded-lg" />
                                             </div>
                                             <div className="flex flex-col gap-3">
                                                 <h1 className="font-medium">{item.name}</h1>
@@ -334,6 +339,11 @@ const CarPage = () => {
                                     )
                                 })
                             }
+                        </div>
+                        
+                        {/* Pagination */}
+                        <div>
+                            <Pagination />
                         </div>
 
 

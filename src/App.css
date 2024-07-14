@@ -3,127 +3,61 @@
 @tailwind utilities;
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* .bank-option input[type="radio"] {
-  opacity: 0;
-  position: absolute;
-  width: 0;
-  height: 0;
+.bank-option input[type="radio"] {
+    opacity: 0;
+    position: absolute;
+    width: 0;
+    height: 0;
 }
 
 .custom-radio {
-  width: 20px;
-  height: 20px;
-  border: 2px solid #000;
-  border-radius: 50%;
-  display: inline-block;
-  position: relative;
-  margin-right: 10px;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #000;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    margin-right: 10px;
 }
 
 .bank-option input[type="radio"]:checked+.custom-radio::after {
-  content: '';
-  width: 12px;
-  height: 12px;
-  background: #000;
-  border-radius: 50%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+    content: '';
+    width: 12px;
+    height: 12px;
+    background: #000;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 
-  /* Hide the arrow buttons for input type number in Chrome, Safari, Edge, Opera */
-  input[type=number]::-webkit-inner-spin-button,
-  input[type=number]::-webkit-outer-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-  }
+/* Hide the arrow buttons for input type number in Chrome, Safari, Edge, Opera */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
 
-  /* Hide the arrow buttons for input type number in Firefox */
-  input[type=number] {
-      -moz-appearance: textfield;
-  }
+/* Hide the arrow buttons for input type number in Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
 
 
-   /* Untuk browser webkit (Chrome, Safari, dll.) */
-   ::-webkit-scrollbar {
+/* Untuk browser webkit (Chrome, Safari, dll.) */
+::-webkit-scrollbar {
     display: none;
 }
 
-/* Untuk Firefox */
+/* Untuk Firefox browser */
+/* Hilangkan bilah scroll di Firefox */
 html {
-    scrollbar-width: none; /* Hilangkan bilah scroll di Firefox */
-} */
-
-
-
-
-/*hamburger bar*/
-.menu-toggle {
-  padding: 10px 10px;
-  border: 1px solid red;
-  display: none;
-  flex-direction: column;
-  height: 25px;
-  justify-content: space-between;
-  position: relative;
-  z-index: 2;
-}
-
-.menu-toggle input {
-  position: absolute;
-  width: 42px;
-  height: 28px;
-  left: -7px;
-  top: -2px;
-  opacity: 0;
-  cursor: pointer;
-  z-index: 9999;
-}
-
-.menu-toggle span {
-  display: block;
-  Width: 28px;
-  height: 4px;
-  background-color: rgb(17, 15, 15);
-  border-radius: 3px;
-  margin-right: 5px;
-
-
-}
-
-
-/*------hamburger menu animation--------*/
-.menu-toggle span:nth-child(2) {
-  transform-origin: 0 0;
-  transition: all .4s ease;
-}
-
-.menu-toggle span:nth-child(4) {
-  transform-origin: 0 100%;
-  transition: all .4s ease;
-}
-
-.menu-toggle span:nth-child(3) {
-  transition: all .4s ease;
-
-}
-
-
-.menu-toggle input:checked~span:nth-child(2) {
-  transform: translate(-2px, 1px) rotate(45deg);
-}
-
-.menu-toggle input:checked~span:nth-child(4) {
-  Transform: rotate(-45deg) translate(-1px, -2px)
-}
-
-.menu-toggle input:checked~span:nth-child(3) {
-  Transform: scale(0)
+    scrollbar-width: none;
 }

@@ -147,9 +147,9 @@ const EditCarPage = () => {
     const handleImg = (e) => {
         const file = e.target.files[0]
         console.log(e.target.files[0]);
-        setImg(e.target.files[0])
+        setImg(e.target.files[0].name)
+        console.log(e.target.files[0].name);
         setImage(URL.createObjectURL(file))
-        console.log(file);
     }
 
     const handleImgClik = () => {
@@ -192,13 +192,15 @@ const EditCarPage = () => {
                 <div className="w-full bg-[#ffffff] shadow-md h-max p-3 flex ">
                     <h1 className="bg-[#CFD4ED] p-2 px-6 w-max">Logo</h1>
                     <div className="w-full ml-40 flex justify-between items-center">
-                        <img
-                            src="../../hamburger-menu.png"
-                            alt=""
-                            onClick={handleToggleMenu}
-                            className={`w-[33px] h-[33px] mt-1 cursor-pointer ${toggleMenu ? "rotate-90" : ""
-                                } transition transition-timing-function: ease-in-out transition-duration: 0.5s`}
-                        />
+                       {/* Hamburger menu Toggle */}
+                        <div className=" ">
+                            <div className="menu-toggle" onClick={handleToggleMenu}>
+                            <input type="checkbox" />
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            </div>
+                        </div>
                         <div className="flex">
                             <>
                                 <div className="relative">
@@ -308,7 +310,7 @@ const EditCarPage = () => {
                                     <div className="relative border p-2 pl-4 w-[380px] h-14" onClick={handleImgClik}>
                                         {image ? <img src={image} alt="" className="w-10 h-10 border rounded-md" /> : <p className="text-[#949494] text-sm  absolute top-3 mt-1">Upload Foto Mobil</p>}
                                         {
-                                            img ? <p className="text-[#1d1d20] text-sm  absolute top-3 mt-2 left-16">{image.substring(0, 35)}...</p> : null
+                                            image ? <p className="text-[#1d1d20] text-sm  absolute top-3 mt-2 left-16">{img.substr(45) ? img.substr(0, 45) + "..." : img}</p> : null
                                         }
                                         <input
                                             name="img"

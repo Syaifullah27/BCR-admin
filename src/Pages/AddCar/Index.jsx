@@ -69,8 +69,8 @@ const AddCarPage = () => {
 
     const handleImg = (e) => {
         const file = e.target.files[0]
-        console.log(e.target.files[0]);
-        setImg(e.target.files[0])
+        setImg(e.target.files[0].name)
+        console.log(e.target.files[0].name);
         setImage(URL.createObjectURL(file))
     }
 
@@ -176,13 +176,15 @@ const AddCarPage = () => {
                 <div className="w-full bg-[#ffffff] shadow-md h-max p-3 flex ">
                     <h1 className="bg-[#CFD4ED] p-2 px-6 w-max">Logo</h1>
                     <div className="w-full ml-40 flex justify-between items-center">
-                        <img
-                            src="hamburger-menu.png"
-                            alt=""
-                            onClick={handleToggleMenu}
-                            className={`w-[33px] h-[33px] mt-1 cursor-pointer ${toggleMenu ? "rotate-90" : ""
-                                } transition transition-timing-function: ease-in-out transition-duration: 0.5s`}
-                        />
+                       {/* Hamburger menu Toggle */}
+                        <div className=" ">
+                            <div className="menu-toggle" onClick={handleToggleMenu}>
+                            <input type="checkbox" />
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            </div>
+                        </div>
                         <div className="flex">
                             <>
                                 <div className="relative">
@@ -277,9 +279,9 @@ const AddCarPage = () => {
                         </div>
 
                         {/* FORM Add car */}
-                        <div className="pl-8 pt-6 w-full flex flex-col justify-center">
+                        <div className="px-8 pt-6 w-full flex flex-col justify-center">
                             <h1 className="text-xl font-semibold">Add New Car</h1>
-                            <div className=" flex gap-20 bg-[#ffffff] mt-5 p-4 w-4/5 h-5/6">
+                            <div className=" flex gap-20 bg-[#ffffff] mt-5 p-4 w-full ">
                                 <div className="flex flex-col gap-7 pt-1">
                                     <p>Nama / Tipe Mobil</p>
                                     <p>Harga</p>
@@ -302,7 +304,7 @@ const AddCarPage = () => {
                                     <div className="relative border p-2 pl-4 w-[380px] h-14" onClick={handleImgClik}>
                                         {image ? <img src={image} alt="" className="w-10 h-10 border rounded-md" /> : <p className="text-[#949494] text-sm  absolute top-3 mt-1">Upload Foto Mobil</p>}
                                         {
-                                            image ? <p className="text-[#1d1d20] text-sm  absolute top-3 mt-2 left-16">{image.substring(0, 35)}...</p> : null
+                                            image ? <p className="text-[#1d1d20] text-sm  absolute top-3 mt-2 left-16">{img.substring(0, 40)}</p> : null
                                         }
                                         <input
                                             name="img"

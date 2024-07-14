@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import "chart.js/auto";
 import Chart from "react-apexcharts";
 import axios from "axios";
+import '../Test/test.css'
 
 const DashboardPage = () => {
   const navigate = useNavigate();
@@ -191,13 +192,16 @@ const DashboardPage = () => {
         <div className="w-full bg-[#ffffff] shadow-md h-max p-3 flex ">
           <h1 className="bg-[#CFD4ED] p-2 px-6 w-max">Logo</h1>
           <div className="w-full ml-40 flex justify-between items-center">
-            <img
-              src="hamburger-menu.png"
-              alt=""
-              onClick={handleToggleMenu}
-              className={`w-[33px] h-[33px] mt-1 cursor-pointer ${toggleMenu ? "rotate-90" : ""
-                } transition transition-timing-function: ease-in-out transition-duration: 0.5s`}
-            />
+
+            {/* Hamburger menu Toggle */}
+            <div className=" ">
+                <div className="menu-toggle" onClick={handleToggleMenu}>
+                  <input type="checkbox" />
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+            </div>
             <div className="flex">
               <div className="flex items-center pl-5 gap-1 pr-5">
                 <img

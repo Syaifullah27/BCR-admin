@@ -1,0 +1,202 @@
+.backToMenu {
+    width: 220px;
+    height: 50px;
+    position: absolute;
+    cursor: pointer;
+}
+
+.backToMenu a {
+    opacity: 0;
+}
+
+
+.navbar-wrapper {
+    /* box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1); */
+    background-color:#F1F3FF;
+    position: fixed;
+    width: 100%;
+    z-index: 99999;
+}
+
+.logo {
+    width: 215px;
+}
+
+.navbar {
+    padding-top: 20px;
+    padding-bottom: 5px;
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 10px;
+}
+
+.navbar ul {
+    justify-content: flex-end;
+    list-style: none;
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    padding-right: 5px;
+    align-content: center;
+}
+
+.navbar a {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 500;
+    display: block;
+    line-height: 20px;
+    size: 14px;
+    text-decoration: none;
+    padding: 10px;
+    text-align: center;
+    color: rgb(0, 0, 0);
+    text-shadow: 0px 0px 1px rgba(5, 5, 5, 0.658);
+    font-size: 1em;
+}
+
+.navbar a:hover {
+    color: rgb(73, 73, 73);
+}
+
+/*hamburger bar*/
+.menu-toggle {
+    display: flex;
+    flex-direction: column;
+    height: 25px;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+}
+
+.menu-toggle input {
+    position: absolute;
+    width: 42px;
+    height: 28px;
+    left: -7px;
+    top: -2px;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 9999;
+}
+
+.menu-toggle span {
+    display: block;
+    Width: 28px;
+    height: 4px;
+    background-color: rgb(17, 15, 15);
+    border-radius: 3px;
+    margin-right: 5px;
+
+
+}
+
+
+/*------hamburger menu animation--------*/
+.menu-toggle span:nth-child(2) {
+    transform-origin: 0 0;
+    transition: all .4s ease;
+}
+
+.menu-toggle span:nth-child(4) {
+    transform-origin: 0 100%;
+    transition: all .4s ease;
+}
+
+.menu-toggle span:nth-child(3) {
+    transition: all .4s ease;
+
+}
+
+
+.menu-toggle input:checked~span:nth-child(2) {
+    transform: translate(-2px, 1px) rotate(45deg);
+}
+
+.menu-toggle input:checked~span:nth-child(4) {
+    Transform: rotate(-45deg) translate(-1px, -2px)
+}
+
+.menu-toggle input:checked~span:nth-child(3) {
+    Transform: scale(0)
+}
+
+
+
+/*--------Responsive breakpoint----------*/
+/* 
+
+@media (max-width:765px) {
+.logo {
+    width: 200px;
+}
+
+.logo img {
+    width: 100%;
+}
+
+    .navbar {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .navbar ul.active {
+        right: 0;
+    }
+
+    .menu-toggle {
+        display: flex;
+        color:rgb(17, 15, 15);
+    }
+
+    .navbar ul {
+        display: flex;
+        position: absolute;
+        flex-direction: column;
+        top: 0px;
+        right: -100%;
+        width: 13rem;
+        height: 100vh;
+        align-items: start;
+        justify-content: start;
+        padding-top: 55px;
+        gap: 20px;
+        /* justify-content: space-evenly; */
+        /* background-color: rgb(255, 255, 255);
+        transition: .5s all ease;
+    }
+
+    .navbar ul::after{
+        font-family: Arial, Helvetica, sans-serif;
+        content: "BCR";
+        position: absolute;
+        top: 25px;
+        left: 19px;
+        font-weight: bold;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .navbar ul:hover {
+        color: rgb(208, 209, 211);
+        text-shadow: 0px 0px 1px rgb(255, 255, 255);
+    }
+
+    .navbar ul li {
+        padding: 10px;
+    }
+
+    .navbar ul li a {
+        font-size: 14px;
+        font-weight: 500;
+        color: black;
+        line-height: 20px;
+    }
+    
+    button {
+        margin-left: 15px;
+    }
+
+}  */

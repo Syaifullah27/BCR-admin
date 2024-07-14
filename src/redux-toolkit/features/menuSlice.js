@@ -1,18 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import axios from "axios";
-// import { Searchcars } from "../../context/searchCars";
-// import { useContext } from "react";
-
-
 
 
 // eslint-disable-next-line no-unused-vars
 export const getMenu = createAsyncThunk("menu/getMenu", async (search) => {
 
-    // console.log('search', search);
-    // console.log(page);
-    // const { search, setSearch } = useContext(Searchcars)
-    // console.log('searchCar', search);
+    // console.log(search, page, limit);
+
     const payload = {
         headers: {
             access_token: localStorage.getItem("token_admin_binar")
@@ -29,40 +23,46 @@ export const getMenu = createAsyncThunk("menu/getMenu", async (search) => {
 
 
 
-const initialState = {
-    menu: [],
-    loading: false,
-    error: null,
-    pagination: {
-        page: 1,
-        pageSize: 10,
-        count: 0,
-        
-    }
-}
+
 
 
 
 
 const menuSlice = createSlice({
     name: 'menu',
-    initialState,
-    reducers: {},
+    initialState: {
+        menu: [],
+        loading: false,
+        error: null,
+        status: 'idle',
+        page: 1,
+        totalPages: 1,
+    },
+    reducers: {
+    setPage(state, action) {
+        state.page = action.payload;
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(getMenu.pending, (state) => {
                 state.loading = true
+                state.status = 'loading';
             })
             .addCase(getMenu.fulfilled, (state, action) => {
                 state.loading = false
+                state.status = 'succeeded';
                 state.menu = action.payload
+                state.totalPages = action.payload.pageCount;
             })
             .addCase(getMenu.rejected, (state, action) => {
                 state.loading = false
+                state.status = 'failed';
                 state.error = action.error.message
             })
     },
 })
+export const { setPage } = menuSlice.actions;
 
 export default menuSlice.reducer
 
