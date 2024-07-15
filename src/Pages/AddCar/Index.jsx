@@ -7,12 +7,13 @@ import axios from "axios"
 import { useRef } from "react"
 import { PopupContext } from "../../context/messagePopup"
 import { Searchcars } from "../../context/searchCars"
-// import { getMenu } from "../../redux-toolkit/features/menuSlice"
-// import { useDispatch } from "react-redux"
+import { useDispatch } from "react-redux"
+import { fetchData } from "../../redux-toolkit/features/menuSlice"
+
 
 const AddCarPage = () => {
     const navigate = useNavigate()
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
     const [toggleMenu, setToggleMenu] = useState(false)
     // eslint-disable-next-line no-unused-vars
     const [searchCar, setSearchCar] = useState("")
@@ -32,16 +33,7 @@ const AddCarPage = () => {
     });
 
 
-    // const handleMessage = (e) => {
-    //     const { name, value } = e.target;
-    //     setForm({ ...form, [name]: value });
-    // };
-
-
-
-    // const [selectMenu, setSelectMenu] = useState('Cars')
     const [dropdownToggle, setDropdownToggle] = useState(false)
-
 
     // eslint-disable-next-line no-unused-vars
     const { popupMessage, showPopupMessage, showPopup } = useContext(PopupContext);
@@ -105,11 +97,12 @@ const AddCarPage = () => {
         }
 
         // console.log(formData);
-        console.log(form.name, form.price, form.category);
+        // console.log(form.name, form.price, form.category);
 
         try {
             const res = await axios.post("https://api-car-rental.binaracademy.org/admin/car", formData, config)
             console.log(res);
+            dispatch(fetchData());
             showPopupMessage('Data Berhasil Disimpan');
             navigate("/car")
             // setShowPopup(true);
@@ -226,7 +219,7 @@ const AddCarPage = () => {
                                         } transition transition-timing-function: ease-in-out transition-duration: 0.5s`}
                                 />
                                 {dropdownToggle ? (
-                                    <div className="flex justify-center items-center w-[150px] h-[70px] rounded-sm bg-[#ffffff] absolute top-16 right-0 p-4">
+                                    <div className="flex justify-center items-center w-[150px] h-[70px] rounded-sm bg-[#ffffff] absolute top-16 right-0 p-4 z-50">
                                         <button
                                             onClick={handleLogout}
                                             className="text-[#ffffff] font-medium p-2 bg-[#FA2C5A] rounded-lg"

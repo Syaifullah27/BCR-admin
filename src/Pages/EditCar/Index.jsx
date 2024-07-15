@@ -1,22 +1,21 @@
 import { useContext } from "react"
 import { useState } from "react"
 import { Link } from "react-router-dom"
-// import { SelectContext } from "../../context/selectMenu"
 import { useNavigate } from "react-router-dom"
 import { useRef } from "react"
 import { useParams } from "react-router-dom"
 import axios from "axios"
 import { useEffect } from "react"
 import { PopupContext } from "../../context/messagePopup"
-// import { useDispatch } from "react-redux"
 import { Searchcars } from "../../context/searchCars"
-// import { getMenu } from "../../redux-toolkit/features/menuSlice"
+import { fetchData } from "../../redux-toolkit/features/menuSlice"
+import { useDispatch } from "react-redux"
 
 const EditCarPage = () => {
     const navigate = useNavigate()
     const id = useParams().id
     const [car, setCar] = useState([])
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
     // console.log(id);
     
     // eslint-disable-next-line no-unused-vars
@@ -119,6 +118,7 @@ const EditCarPage = () => {
         try {
             const res = await axios.put(`https://api-car-rental.binaracademy.org/admin/car/${id}`, formData, config)
             console.log(res);
+            dispatch(fetchData());
             showPopupMessage('Data Berhasil Diedit');
             navigate("/car")
         } catch (error) {
@@ -242,7 +242,7 @@ const EditCarPage = () => {
                                         } transition transition-timing-function: ease-in-out transition-duration: 0.5s`}
                                 />
                                 {dropdownToggle ? (
-                                    <div className="flex justify-center items-center w-[150px] h-[70px] rounded-sm bg-[#ffffff] absolute top-16 right-0 p-4">
+                                    <div className="flex justify-center items-center w-[150px] h-[70px] rounded-sm bg-[#ffffff] absolute top-16 right-0 p-4 z-50">
                                         <button
                                             onClick={handleLogout}
                                             className="text-[#ffffff] font-medium p-2 bg-[#FA2C5A] rounded-lg"

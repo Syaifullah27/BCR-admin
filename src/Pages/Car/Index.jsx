@@ -77,29 +77,50 @@ const CarPage = () => {
     };
 
 
+
+    
     // Delete Car
+    const [showPopupDelete, setShowPopupDelete] = useState(false);
+    const [carId, setCarId] = useState();
+    console.log(carId);
+
+    const handleConfirmDelete = (id) => {
+        setCarId(id);
+        setShowPopupDelete(true);
+    };
+
+
     const handleDeleteCar = async (id) => {
         // console.log(id);
-        const config = {
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Content-Type": "multipart/form-data",
-                access_token:
-                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGJjci5pbyIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTY2NTI0MjUwOX0.ZTx8L1MqJ4Az8KzoeYU2S614EQPnqk6Owv03PUSnkzc",
-            },
-        };
-        try {
-            const res = await axios.delete(
-                `https://api-car-rental.binaracademy.org/admin/car/${id}`,
-                config
-            );
-            console.log(res);
-            showPopupMessage("Data Berhasil Dihapus");
-        } catch (error) {
-            console.log(error);
-            showPopupMessage("Terjadi kesalahan saat menghapus data mobil");
-        }
+        // Handle show delete popup
+
+
+
+                const config = {
+                    headers: {
+                        "Access-Control-Allow-Origin": "*",
+                        "Content-Type": "multipart/form-data",
+                        access_token:
+                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGJjci5pbyIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTY2NTI0MjUwOX0.ZTx8L1MqJ4Az8KzoeYU2S614EQPnqk6Owv03PUSnkzc",
+                    },
+                };
+        
+                try {
+                    const res = await axios.delete(
+                        `https://api-car-rental.binaracademy.org/admin/car/${id}`,
+                        config
+                    );
+                    setShowPopupDelete(false);
+                    console.log(res);
+                    showPopupMessage("Data Berhasil Dihapus");
+                    dispatch(fetchData({ page: currentPage, searchTerm, capacity  }));
+                } catch (error) {
+                    console.log(error);
+                    showPopupMessage("Terjadi kesalahan saat menghapus data mobil");
+                }
     };
+
+    
 
 
 
@@ -234,6 +255,25 @@ const CarPage = () => {
                         {/* Message alert add,edit,delete */}
                         {showPopup && FormatMessage(popupMessage)}
 
+                        {/* Delete Popup */}
+                        {showPopupDelete && (
+                            <div className="popup-overlay">
+                                <div className="fixed left-[38%] top-[26%] flex justify-center items-center flex-col gap-4 p-4  w-80 bg-[#ffffff] z-50 rounded-sm">
+                                    <img src="img-BeepBeep.png" alt="" />
+                                    <h1 className="text-center font-medium text-lg">Menghapus Data Mobil</h1>
+                                    <p className="text-center text-sm text-[]">Setelah dihapus, data mobil tidak dapat dikembalikan. Yakin ingin menghapus?</p>
+                                    <div className="flex gap-4 pb-2">
+                                    <button
+                                        onClick={ () => handleDeleteCar(carId) }
+                                        className="bg-[#0D28A6] text-white p-2 font-medium rounded-sm w-24">Ya</button>
+                                    <button
+                                        onClick={() => setShowPopupDelete(false)}
+                                        className="border-[2px] border-[#0D28A6] text-[#0D28A6] p-2 font-medium rounded-sm w-24">Tidak</button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                         {/* Header */}
                         <div className="w-full px-8 py-6">
                             <div className="w-full flex justify-between items-center">
@@ -332,7 +372,7 @@ const CarPage = () => {
                                                 </div>
                                                 <div className="flex gap-6 pt-4 pb-2">
                                                     <button
-                                                        onClick={() => handleDeleteCar(item.id)}
+                                                        onClick={() => handleConfirmDelete(item.id)}
                                                         className="border-2 border-[#FA2C5A] w-1/2 p-2 rounded-sm text-[#FA2C5A] font-medium flex gap-2 items-center justify-center">
                                                         <img src="fi_trash-2.png" alt="" className="" />
                                                         Delete
