@@ -1,12 +1,10 @@
-import { configureStore } from "@reduxjs/toolkit"
-import menuReducers from "./features/menuSlice"
+import { configureStore } from '@reduxjs/toolkit';
+import dataReducer from './features/menuSlice';
 
 const store = configureStore({
-    reducer: {
-        menuReducers
-    }
-})
+  reducer: {
+    data: dataReducer,
+  },
+});
 
-
-
-export default store  
+export default store;

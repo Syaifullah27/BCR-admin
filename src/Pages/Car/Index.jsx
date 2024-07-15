@@ -1,39 +1,27 @@
 import { useContext } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Searchcars } from "../../context/searchCars";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { getMenu } from "../../redux-toolkit/features/menuSlice";
-import { SelectContext } from "../../context/selectMenu";
+import { fetchData, setCapacity, setPage, setSearchTerm } from "../../redux-toolkit/features/menuSlice";
 import { FormatMessage, PopupContext } from "../../context/messagePopup";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import axios from "axios";
 import { formatKategoryCars, formatRupiah, formatTanggalIndo } from "../../utils/formater";
-import Pagination from "../../Components/Pagination";
 
 const CarPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [toggleMenu, setToggleMenu] = useState(false);
     const [dropdownToggle, setDropdownToggle] = useState(false);
-    // const [page, setPage] = useState(1);
-    const { search, setSearch } = useContext(Searchcars);
-    // eslint-disable-next-line no-unused-vars
-    const { selectMenu, setSelectMenu } = useContext(SelectContext);
-    // eslint-disable-next-line no-unused-vars
     const { popupMessage, showPopup, showPopupMessage } = useContext(PopupContext);
-    const [selectCapacityCar, setSelectCapacityCar] = useState("All");
-
-    const handleSearchCar = (e) => {
-        setSearch(e.target.value);
-        // console.log(search);
-    };
-
-    const handleSelectCapacityCar = (e) => {
-        setSelectCapacityCar(e.target.value);
-    };
+    // const [selectCapacityCar, setSelectCapacityCar] = useState("All");
+    
+    
+    // const handleSelectCapacityCar = (e) => {
+    //     setSelectCapacityCar(e.target.value);
+    // };
 
     const handleToggleMenu = () => {
         setToggleMenu(!toggleMenu);
@@ -48,23 +36,45 @@ const CarPage = () => {
         navigate("/login");
     };
 
-    const handleSearch = (e) => {
-        e.preventDefault();
-        dispatch(getMenu(search));
-    };
 
 
     // Get List car
-    const { menuReducers} = useSelector((state) => state);
+    const { data, status, currentPage, totalPages, searchTerm, capacity   } = useSelector((state) => state.data);
+    const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
+    const [localCapacity, setLocalCapacity] = useState(capacity);
+    console.log(data);
 
     useEffect(() => {
-        dispatch(getMenu(search));
-    }, []);
-    console.log(menuReducers);
+        dispatch(fetchData({ page: currentPage, searchTerm, capacity  }));
+    }, [dispatch, currentPage, searchTerm, capacity ]);
+
+    const handlePageChange = (page) => {
+        // window.scrollTo({ top: 0, behavior: "smooth" });
+        dispatch(setPage(page));
+    };
+
+    const containerClassName = data?.cars && data?.cars?.length > 0 ? 'data-container' : 'empty-container';
 
 
-    // if (status === 'loading') return <div>Loading...</div>;
-    // if (status === 'failed') return <div>Error: {error}</div>;
+
+    // Handle Search Car
+    const handleSearchChange = (e) => {
+        setLocalSearchTerm(e.target.value);
+    };
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        dispatch(setSearchTerm(localSearchTerm));
+        dispatch(setPage(1)); // Reset to the first page on new search
+    };
+
+
+    // handle select capacity
+    const handleCapacityChange = (e) => {
+        setLocalCapacity(e.target.value);
+        dispatch(setCapacity(e.target.value));
+        dispatch(setPage(1)); // Reset to the first page on capacity change
+    };
 
 
     // Delete Car
@@ -85,7 +95,6 @@ const CarPage = () => {
             );
             console.log(res);
             showPopupMessage("Data Berhasil Dihapus");
-            getMenu();
         } catch (error) {
             console.log(error);
             showPopupMessage("Terjadi kesalahan saat menghapus data mobil");
@@ -131,34 +140,34 @@ const CarPage = () => {
                 <div className="w-full bg-[#ffffff] shadow-md h-max p-3 flex ">
                     <h1 className="bg-[#CFD4ED] p-2 px-6 w-max">Logo</h1>
                     <div className="w-full ml-40 flex justify-between items-center">
-                       {/* Hamburger menu Toggle */}
+                        {/* Hamburger menu Toggle */}
                         <div className=" ">
                             <div className="menu-toggle" onClick={handleToggleMenu}>
-                            <input type="checkbox" />
-                            <span></span>
-                            <span></span>
-                            <span></span>
+                                <input type="checkbox" />
+                                <span></span>
+                                <span></span>
+                                <span></span>
                             </div>
                         </div>
                         <div className="flex">
                             <>
                                 <div className="relative">
                                     <input
-                                        onChange={handleSearchCar}
+                                        onChange={handleSearchChange}
                                         type="text"
-                                        value={search}
+                                        value={localSearchTerm}
                                         className="border-[2px] bordder-[#999999] p-2 outline-none placeholder:pl-8"
                                         placeholder="Search"
                                     />
                                     <img
                                         src="fi_search.png"
                                         alt=""
-                                        className={`absolute top-3 left-3 ${search ? "hidden" : ""
+                                        className={`absolute top-3 left-3 ${localSearchTerm ? "hidden" : ""
                                             }`}
                                     />
                                 </div>
                                 <button
-                                    onClick={handleSearch}
+                                    onClick={handleSearchSubmit}
                                     className="border-[2px] border-[#0D28A6] text-[#0D28A6] font-medium p-2"
                                 >
                                     Search
@@ -199,18 +208,18 @@ const CarPage = () => {
                     {toggleMenu ? (
                         <div className=" w-[220px] h-[100%] bg-[#ffffff]">
                             <div className="">
-                                    <div className="flex flex-col gap-4 pt-4 ">
-                                        <h1 className="font-medium text-[#999999] pl-4">Car</h1>
-                                        <h1 className="font-medium text-sm bg-[#CFD4ED] pl-4 p-2 py-3">
-                                            List Car
-                                        </h1>
-                                    </div>
+                                <div className="flex flex-col gap-4 pt-4 ">
+                                    <h1 className="font-medium text-[#999999] pl-4">Car</h1>
+                                    <h1 className="font-medium text-sm bg-[#CFD4ED] pl-4 p-2 py-3">
+                                        List Car
+                                    </h1>
+                                </div>
                             </div>
                         </div>
                     ) : null}
 
                     {/* Main Content */}
-                    <div className="w-full h-[100%] bg-[#f5f6ff]">
+                    <div className={`w-full ${containerClassName} bg-[#f5f6ff]`}>
                         {/* nav */}
                         <div className="flex gap-2 items-center pl-8 pt-5">
                             <p className="font-medium text-lg">
@@ -240,58 +249,58 @@ const CarPage = () => {
                         {/* select capacity car */}
                         <div className="flex gap-4 pl-8">
                             <label
-                                className={`bank-option cursor-pointer font-medium text-blue-700 ${selectCapacityCar === "All"
+                                className={`bank-option cursor-pointer font-medium text-blue-700 ${localCapacity === ""
                                     ? "bg-[#CFD4ED] border-[1px] border-blue-900"
                                     : "opacity-40"
                                     } border-[1px] border-blue-900 p-1 px-3 rounded-sm `}
                             >
                                 <input
                                     type="radio"
-                                    value={"All"}
-                                    onChange={handleSelectCapacityCar}
-                                    checked={selectCapacityCar === "All"}
+                                    value={""}
+                                    onChange={handleCapacityChange}
+                                    checked={localCapacity === ""}
                                 />
                                 All
                             </label>
                             <label
-                                className={`bank-option cursor-pointer font-medium text-blue-700 ${selectCapacityCar === "2-4"
+                                className={`bank-option cursor-pointer font-medium text-blue-700 ${localCapacity === "small"
                                     ? "bg-[#CFD4ED] border-[1px] border-blue-900"
                                     : "opacity-40"
                                     } border-[1px] border-blue-900 p-1 px-3 rounded-sm `}
                             >
                                 <input
                                     type="radio"
-                                    value={"2-4"}
-                                    onChange={handleSelectCapacityCar}
-                                    checked={selectCapacityCar === "2-4"}
+                                    value={"small"}
+                                    onChange={handleCapacityChange}
+                                    checked={localCapacity === "small"}
                                 />
                                 2-4 people
                             </label>
                             <label
-                                className={`bank-option cursor-pointer font-medium text-blue-700 ${selectCapacityCar === "4-6"
+                                className={`bank-option cursor-pointer font-medium text-blue-700 ${localCapacity === "medium"
                                     ? "bg-[#CFD4ED] border-[1px] border-blue-900"
                                     : "opacity-40"
                                     } border-[1px] border-blue-900 p-1 px-3 rounded-sm `}
                             >
                                 <input
                                     type="radio"
-                                    value={"4-6"}
-                                    onChange={handleSelectCapacityCar}
-                                    checked={selectCapacityCar === "4-6"}
+                                    value={"medium"}
+                                    onChange={handleCapacityChange}
+                                    checked={localCapacity === "medium"}
                                 />
                                 4-6 people
                             </label>
                             <label
-                                className={`bank-option cursor-pointer font-medium text-blue-700 ${selectCapacityCar === "6-8"
+                                className={`bank-option cursor-pointer font-medium text-blue-700 ${localCapacity === "large"
                                     ? "bg-[#CFD4ED] border-[1px] border-blue-900"
                                     : "opacity-40"
                                     } border-[1px] border-blue-900 p-1 px-3 rounded-sm `}
                             >
                                 <input
                                     type="radio"
-                                    value={"6-8"}
-                                    onChange={handleSelectCapacityCar}
-                                    checked={selectCapacityCar === "6-8"}
+                                    value={"large"}
+                                    onChange={handleCapacityChange}
+                                    checked={localCapacity === "large"}
                                 />
                                 6-8 people
                             </label>
@@ -299,8 +308,12 @@ const CarPage = () => {
 
                         {/* List Car */}
                         <div className="px-8 pt-6 flex flex-wrap gap-10">
-                            {
-                                menuReducers?.menu?.cars?.map((item, index) => {
+                            {status === 'loading' && <p>Loading...</p>} 
+                            {status === 'failed' && <p>Eror fetching data</p>} 
+                            {status === 'succeeded' && <div className="flex flex-wrap gap-10">
+                                {data?.cars?.length === 0  && <p>No data</p>}
+                                {
+                                data?.cars?.map((item, index) => {
                                     return (
                                         <div key={index} className="w-[351px]  bg-[#ffffff] shadow-md border rounded-md flex flex-col p-4 gap-4">
                                             <div className="w-full flex justify-center pt-6">
@@ -339,11 +352,21 @@ const CarPage = () => {
                                     )
                                 })
                             }
+                            </div>
+                            } 
                         </div>
-                        
-                        {/* Pagination */}
-                        <div>
-                            <Pagination />
+
+                        <div className={`flex justify-center gap-5 py-10 mr-[75px]`}>
+                            {Array.from({ length: totalPages }, (_, index) => (
+                                <button
+                                    className={`bg-[#ffffff] border p-2 px-5 rounded-sm font-medium text-sm ${currentPage === index + 1 ? 'bg-[#CFD4ED] border-[1px] border-blue-900' : 'opacity-40'}`}
+                                    key={index}
+                                    onClick={() => handlePageChange(index + 1)}
+                                    disabled={currentPage === index + 1}
+                                >
+                                    {index + 1}
+                                </button>
+                            ))}
                         </div>
 
 

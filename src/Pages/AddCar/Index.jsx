@@ -7,12 +7,12 @@ import axios from "axios"
 import { useRef } from "react"
 import { PopupContext } from "../../context/messagePopup"
 import { Searchcars } from "../../context/searchCars"
-import { getMenu } from "../../redux-toolkit/features/menuSlice"
-import { useDispatch } from "react-redux"
+// import { getMenu } from "../../redux-toolkit/features/menuSlice"
+// import { useDispatch } from "react-redux"
 
 const AddCarPage = () => {
     const navigate = useNavigate()
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const [toggleMenu, setToggleMenu] = useState(false)
     // eslint-disable-next-line no-unused-vars
     const [searchCar, setSearchCar] = useState("")
@@ -129,7 +129,7 @@ const AddCarPage = () => {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        dispatch(getMenu(search));
+        // dispatch((search));
     };
 
     const handleToggleMenu = () => {

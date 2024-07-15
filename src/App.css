@@ -61,3 +61,13 @@ input[type=number] {
 html {
     scrollbar-width: none;
 }
+
+
+
+.data-container {
+    height: 100%;
+}
+
+.empty-container {
+    height: 100vh;
+}

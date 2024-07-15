@@ -8,15 +8,15 @@ import { useParams } from "react-router-dom"
 import axios from "axios"
 import { useEffect } from "react"
 import { PopupContext } from "../../context/messagePopup"
-import { useDispatch } from "react-redux"
+// import { useDispatch } from "react-redux"
 import { Searchcars } from "../../context/searchCars"
-import { getMenu } from "../../redux-toolkit/features/menuSlice"
+// import { getMenu } from "../../redux-toolkit/features/menuSlice"
 
 const EditCarPage = () => {
     const navigate = useNavigate()
     const id = useParams().id
     const [car, setCar] = useState([])
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     // console.log(id);
     
     // eslint-disable-next-line no-unused-vars
@@ -134,7 +134,7 @@ const EditCarPage = () => {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        dispatch(getMenu(search));
+        // dispatch(getMenu(search));
     };
 
     const handleToggleMenu = () => {
