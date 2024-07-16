@@ -82,11 +82,17 @@ const AddCarPage = () => {
         setLocalSearchTerm(e.target.value);
     };
 
-    const handleSearchSubmit = (e) => {
-        e.preventDefault();
+    const handleSearchSubmit = () => {
         navigate('/car')
         dispatch(setSearchTerm(localSearchTerm));
     }
+
+    const handleSearchKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleSearchSubmit();
+        }
+    };
 
 
 
@@ -178,6 +184,7 @@ const AddCarPage = () => {
                                             onChange={handleSearchChange}
                                             type="text"
                                             value={localSearchTerm}
+                                            onKeyDown={handleSearchKeyPress}
                                             className="border-[2px] bordder-[#999999] p-2 outline-none placeholder:pl-8"
                                             placeholder="Search"
                                         />
