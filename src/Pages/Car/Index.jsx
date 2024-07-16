@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import axios from "axios";
 import { formatKategoryCars, formatRupiah, formatTanggalIndo } from "../../utils/formater";
+import Skeleton from "../../Components/skeleton";
 
 const CarPage = () => {
     const navigate = useNavigate();
@@ -48,7 +49,7 @@ const CarPage = () => {
         dispatch(setPage(page));
     };
 
-    const containerClassName = data?.cars && data?.cars?.length > 0 ? 'data-container' : 'empty-container';
+    const dataNotFound = data?.cars && data?.cars?.length > 0 ? 'data-container' : 'empty-container' && status === "loading" ? 'data-container' : 'empty-container';
 
 
 
@@ -235,7 +236,7 @@ const CarPage = () => {
                     ) : null}
 
                     {/* Main Content */}
-                    <div className={`w-full ${containerClassName} bg-[#f5f6ff]`}>
+                    <div className={`w-full ${dataNotFound} bg-[#f5f6ff]`}>
                         {/* nav */}
                         <div className="flex gap-2 items-center pl-8 pt-5">
                             <p className="font-medium text-lg">
@@ -343,7 +344,14 @@ const CarPage = () => {
 
                         {/* List Car */}
                         <div className="px-8 pt-6 flex flex-wrap gap-10">
-                            {status === 'loading' && <p>Loading...</p>} 
+                            {status === 'loading' && <div className="flex flex-wrap gap-10">
+                                <Skeleton />
+                                <Skeleton />
+                                <Skeleton />
+                                <Skeleton />
+                                <Skeleton />
+                                <Skeleton />
+                            </div>} 
                             {status === 'failed' && <p>Eror fetching data</p>} 
                             {status === 'succeeded' && <div className="flex flex-wrap gap-10">
                                 {data?.cars?.length === 0  && <p>No data</p>}
