@@ -1,53 +1,38 @@
 import { useContext } from "react"
 import { useState } from "react"
 import { Link } from "react-router-dom"
-import { SelectContext } from "../../context/selectMenu"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import { useRef } from "react"
 import { PopupContext } from "../../context/messagePopup"
-import { Searchcars } from "../../context/searchCars"
 import { useDispatch } from "react-redux"
-import { fetchData } from "../../redux-toolkit/features/menuSlice"
+import { fetchData, setSearchTerm } from "../../redux-toolkit/features/menuSlice"
+import { useSelector } from "react-redux"
 
 
 const AddCarPage = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch();
     const [toggleMenu, setToggleMenu] = useState(false)
-    // eslint-disable-next-line no-unused-vars
-    const [searchCar, setSearchCar] = useState("")
     const inputRef = useRef(null)
     const [img, setImg] = useState(null)
-    // eslint-disable-next-line no-unused-vars
     const [image, setImage] = useState("")
     const [images, setImages] = useState(null)
-    // const [showPopup, setShowPopup] = useState(false);
-    // eslint-disable-next-line no-unused-vars
-    const { search, setSearch } = useContext(Searchcars);
+    const [dropdownToggle, setDropdownToggle] = useState(false)
+    const { showPopupMessage } = useContext(PopupContext);
     const [form, setForm] = useState({
         name: "",
         category: "",
         price: "",
         status: false,
     });
+    const { searchTerm } = useSelector((state) => state.data);
+    const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
 
 
-    const [dropdownToggle, setDropdownToggle] = useState(false)
 
-    // eslint-disable-next-line no-unused-vars
-    const { popupMessage, showPopupMessage, showPopup } = useContext(PopupContext);
-    // eslint-disable-next-line no-unused-vars
-    const { selectMenu, setSelectMenu } = useContext(SelectContext)
 
-    // eslint-disable-next-line no-unused-vars
-    const handleSelectMenu = (e) => {
-        setSelectMenu(e.target.value)
-    }
 
-    const handleSearchCar = (e) => {
-        setSearchCar(e.target.value)
-    }
 
 
     const handdleDropdownToggle = () => {
@@ -68,6 +53,17 @@ const AddCarPage = () => {
         setImages(e.target.files[0])
     }
 
+    const handleImgClik = () => {
+        inputRef.current.click()
+    }
+
+    const handleToggleMenu = () => {
+        setToggleMenu(!toggleMenu)
+    }
+
+    const handleBackToListCars = () => {
+        navigate("/car")
+    }
 
 
     const handleForm = (e) => {
@@ -78,6 +74,22 @@ const AddCarPage = () => {
         const { name, value } = e.target;
         setForm({ ...form, [name]: value });
     }
+
+
+
+    // Handle Search Car
+    const handleSearchChange = (e) => {
+        setLocalSearchTerm(e.target.value);
+    };
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        navigate('/car')
+        dispatch(setSearchTerm(localSearchTerm));
+    }
+
+
+
 
     const handleAddCar = async () => {
 
@@ -96,42 +108,20 @@ const AddCarPage = () => {
             }
         }
 
-        // console.log(formData);
-        // console.log(form.name, form.price, form.category);
 
         try {
             const res = await axios.post("https://api-car-rental.binaracademy.org/admin/car", formData, config)
             console.log(res);
-            dispatch(fetchData());
             showPopupMessage('Data Berhasil Disimpan');
             navigate("/car")
-            // setShowPopup(true);
-            // setTimeout(() => setShowPopup(false), 3000);
+            dispatch(fetchData());
         } catch (error) {
             console.log(error);
             showPopupMessage('Terjadi kesalahan saat menambahkan data mobil');
-            // setShowPopup(true);
-            // setTimeout(() => setShowPopup(false), 3000);
         }
     }
 
 
-    const handleImgClik = () => {
-        inputRef.current.click()
-    }
-
-    const handleSearch = (e) => {
-        e.preventDefault();
-        // dispatch((search));
-    };
-
-    const handleToggleMenu = () => {
-        setToggleMenu(!toggleMenu)
-    }
-
-    const handleBackToListCars = () => {
-        navigate("/car")
-    }
 
 
     return (
@@ -171,53 +161,56 @@ const AddCarPage = () => {
                 <div className="w-full bg-[#ffffff] shadow-md h-max p-3 flex ">
                     <h1 className="bg-[#CFD4ED] p-2 px-6 w-max">Logo</h1>
                     <div className="w-full ml-40 flex justify-between items-center">
-                       {/* Hamburger menu Toggle */}
+                        {/* Hamburger menu Toggle */}
                         <div className=" ">
                             <div className="menu-toggle" onClick={handleToggleMenu}>
-                            <input type="checkbox" />
-                            <span></span>
-                            <span></span>
-                            <span></span>
+                                <input type="checkbox" />
+                                <span></span>
+                                <span></span>
+                                <span></span>
                             </div>
                         </div>
                         <div className="flex">
-                            <>
-                                <div className="relative">
-                                    <input
-                                        onChange={handleSearchCar}
-                                        type="text"
-                                        value={search}
-                                        className="border-[2px] bordder-[#999999] p-2 outline-none placeholder:pl-8"
-                                        placeholder="Search"
-                                    />
+                            <div className="flex items-center pl-5 gap-5 pr-5">
+                                <div className="flex items-center">
+                                    <div className="relative">
+                                        <input
+                                            onChange={handleSearchChange}
+                                            type="text"
+                                            value={localSearchTerm}
+                                            className="border-[2px] bordder-[#999999] p-2 outline-none placeholder:pl-8"
+                                            placeholder="Search"
+                                        />
+                                        <img
+                                            src="../../fi_search.png"
+                                            alt=""
+                                            className={`absolute top-3 left-3 ${localSearchTerm ? "hidden" : ""
+                                                }`}
+                                        />
+                                    </div>
+                                    <button
+                                        onClick={handleSearchSubmit}
+                                        className="border-[2px] border-[#0D28A6] text-[#0D28A6] font-medium p-2"
+                                    >
+                                        Search
+                                    </button>
+                                </div>
+
+                                <div className="flex items-center gap-2">
                                     <img
-                                        src="fi_search.png"
+                                        src="luffy.jpeg"
                                         alt=""
-                                        className={`absolute top-3 left-3 ${search ? "hidden" : ""
-                                            }`}
+                                        className="w-[40px] h-[40px] rounded-full cursor-pointer"
+                                    />
+                                    <p className="text-sm">user 123</p>
+                                    <img
+                                        src="fi_chevron-down.png"
+                                        alt=""
+                                        onClick={handdleDropdownToggle}
+                                        className={`${dropdownToggle ? "rotate-180" : ""
+                                            } transition transition-timing-function: ease-in-out transition-duration: 0.5s`}
                                     />
                                 </div>
-                                <button
-                                    onClick={handleSearch}
-                                    className="border-[2px] border-[#0D28A6] text-[#0D28A6] font-medium p-2"
-                                >
-                                    Search
-                                </button>
-                            </>
-                            <div className="flex items-center pl-5 gap-1 pr-5">
-                                <img
-                                    src="luffy.jpeg"
-                                    alt=""
-                                    className="w-[40px] h-[40px] rounded-full cursor-pointer"
-                                />
-                                <p className="text-sm">user 123</p>
-                                <img
-                                    src="fi_chevron-down.png"
-                                    alt=""
-                                    onClick={handdleDropdownToggle}
-                                    className={`${dropdownToggle ? "rotate-180" : ""
-                                        } transition transition-timing-function: ease-in-out transition-duration: 0.5s`}
-                                />
                                 {dropdownToggle ? (
                                     <div className="flex justify-center items-center w-[150px] h-[70px] rounded-sm bg-[#ffffff] absolute top-16 right-0 p-4 z-50">
                                         <button
@@ -239,24 +232,12 @@ const AddCarPage = () => {
                     {toggleMenu ? (
                         <div className=" w-[220px] h-[100%] bg-[#ffffff]">
                             <div className="">
-                                {selectMenu === "Dashboard" ? (
-                                    <div className="flex flex-col gap-4 pt-4 ">
-                                        <h1 className="font-medium text-[#999999] pl-4">Car</h1>
-                                        <h1 className="font-medium text-sm bg-[#CFD4ED] pl-4 p-2 py-3">
-                                            List Car
-                                        </h1>
-                                    </div>
-                                ) : null}
-                            </div>
-                            <div className="">
-                                {selectMenu === "Cars" ? (
-                                    <div className="flex flex-col gap-4 pt-4 ">
-                                        <h1 className="font-medium text-[#999999] pl-4">Cars</h1>
-                                        <h1 className="font-medium text-sm bg-[#CFD4ED] pl-4 p-2 py-3">
-                                            List Cars
-                                        </h1>
-                                    </div>
-                                ) : null}
+                                <div className="flex flex-col gap-4 pt-4 ">
+                                    <h1 className="font-medium text-[#999999] pl-4">Car</h1>
+                                    <h1 className="font-medium text-sm bg-[#CFD4ED] pl-4 p-2 py-3">
+                                        List Car
+                                    </h1>
+                                </div>
                             </div>
                         </div>
                     ) : null}
@@ -337,7 +318,7 @@ const AddCarPage = () => {
                                 className="bg-[#0D28A6] text-white font-medium p-1 px-5">Save</button>
                         </div>
 
-                    </div>           
+                    </div>
                 </div>
             </div>
         </div>

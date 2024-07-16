@@ -6,11 +6,31 @@ import "chart.js/auto";
 import Chart from "react-apexcharts";
 import axios from "axios";
 import '../Test/test.css'
+import { useSelector } from "react-redux";
+import { setSearchTerm } from "../../redux-toolkit/features/menuSlice";
+import { useDispatch } from "react-redux";
 
 const DashboardPage = () => {
+  const dispatch = useDispatch()
   const navigate = useNavigate();
   const [toggleMenu, setToggleMenu] = useState(false);
   const [dropdownToggle, setDropdownToggle] = useState(false);
+  const { searchTerm   } = useSelector((state) => state.data);
+  const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
+
+
+
+   // Handle Search Car
+    const handleSearchChange = (e) => {
+      setLocalSearchTerm(e.target.value);
+  };
+
+  const handleSearchSubmit = (e) => {
+      e.preventDefault();
+      navigate('/car')
+      dispatch(setSearchTerm(localSearchTerm));
+  }
+
 
   const handleToggleMenu = () => {
     setToggleMenu(!toggleMenu);
@@ -195,28 +215,54 @@ const DashboardPage = () => {
 
             {/* Hamburger menu Toggle */}
             <div className=" ">
-                <div className="menu-toggle" onClick={handleToggleMenu}>
-                  <input type="checkbox" />
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
+              <div className="menu-toggle" onClick={handleToggleMenu}>
+                <input type="checkbox" />
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
             </div>
             <div className="flex">
-              <div className="flex items-center pl-5 gap-1 pr-5">
-                <img
-                  src="luffy.jpeg"
-                  alt=""
-                  className="w-[40px] h-[40px] rounded-full cursor-pointer"
-                />
-                <p className="text-sm">user 123</p>
-                <img
-                  src="fi_chevron-down.png"
-                  alt=""
-                  onClick={handdleDropdownToggle}
-                  className={`${dropdownToggle ? "rotate-180" : ""
-                    } transition transition-timing-function: ease-in-out transition-duration: 0.5s`}
-                />
+              <div className="flex items-center pl-5 gap-5 pr-5">
+                <div className="flex items-center">
+                  <div className="relative">
+                    <input
+                      onChange={handleSearchChange}
+                      type="text"
+                      value={localSearchTerm}
+                      className="border-[2px] bordder-[#999999] p-2 outline-none placeholder:pl-8"
+                      placeholder="Search"
+                    />
+                    <img
+                      src="../../fi_search.png"
+                      alt=""
+                      className={`absolute top-3 left-3 ${localSearchTerm ? "hidden" : ""
+                        }`}
+                    />
+                  </div>
+                  <button
+                    onClick={handleSearchSubmit}
+                    className="border-[2px] border-[#0D28A6] text-[#0D28A6] font-medium p-2"
+                  >
+                    Search
+                  </button>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <img
+                    src="luffy.jpeg"
+                    alt=""
+                    className="w-[40px] h-[40px] rounded-full cursor-pointer"
+                  />
+                  <p className="text-sm">user 123</p>
+                  <img
+                    src="fi_chevron-down.png"
+                    alt=""
+                    onClick={handdleDropdownToggle}
+                    className={`${dropdownToggle ? "rotate-180" : ""
+                      } transition transition-timing-function: ease-in-out transition-duration: 0.5s`}
+                  />
+                </div>
                 {dropdownToggle ? (
                   <div className="flex justify-center items-center w-[150px] h-[70px] rounded-sm bg-[#ffffff] absolute top-16 right-0 p-4">
                     <button

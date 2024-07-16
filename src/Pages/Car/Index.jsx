@@ -16,12 +16,7 @@ const CarPage = () => {
     const [toggleMenu, setToggleMenu] = useState(false);
     const [dropdownToggle, setDropdownToggle] = useState(false);
     const { popupMessage, showPopup, showPopupMessage } = useContext(PopupContext);
-    // const [selectCapacityCar, setSelectCapacityCar] = useState("All");
-    
-    
-    // const handleSelectCapacityCar = (e) => {
-    //     setSelectCapacityCar(e.target.value);
-    // };
+
 
     const handleToggleMenu = () => {
         setToggleMenu(!toggleMenu);
@@ -194,7 +189,7 @@ const CarPage = () => {
                                     Search
                                 </button>
                             </>
-                            <div className="flex items-center pl-5 gap-1 pr-5">
+                            <div className="flex items-center pl-5 gap-2 pr-5">
                                 <img
                                     src="luffy.jpeg"
                                     alt=""
