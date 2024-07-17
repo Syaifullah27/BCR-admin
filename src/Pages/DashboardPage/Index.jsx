@@ -82,7 +82,7 @@ const DashboardPage = () => {
     }
   };
 
-  const [sortFrom, setSortFrom] = useState("");
+  // const [sortFrom, setSortFrom] = useState("");
   const getListOrder = async (page, size = perPage) => {
     const token =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGJjci5pbyIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTcxODg5MDY2MH0.WLWnMOa5rwS7RVe1zdPMrSnn2-jbpRKjnoO-44YhIDw";
@@ -158,12 +158,12 @@ const DashboardPage = () => {
     },
   ];
 
-  const dataId = listOrder.map((item) => {
-    return item.id;
-  });
-  const dataEmail = listOrder.map((item) => {
-    return item.User.email;
-  });
+  // const dataId = listOrder.map((item) => {
+  //   return item.id;
+  // });
+  // const dataEmail = listOrder.map((item) => {
+  //   return item.User.email;
+  // });
 
   // console.log("data order", dataOrder);
 
@@ -284,219 +284,220 @@ const DashboardPage = () => {
 
   return (
     <div className="flex">
-      {/* Navbar Left Side */}
-      <div className="bg-[#0D28A6]">
+    {/* Navbar Left Side */}
+    <div className="bg-[#0D28A6]">
         <div className="bg-[#0D28A6] h-[100%] w-max flex flex-col gap-2">
-          <div className="p-2 flex flex-col justify-center items-center h-14 pt-6">
-            <h1 className="bg-[#CFD4ED] p-2 py-2">logo</h1>
-          </div>
-
-          <div
-            className={`p-2 flex flex-col cursor-pointer justify-center items-center h-14  bg-[#acb5df]`}
-          >
-            <img src="home-logo.png" alt="" />
-            <h1 className="text-white text-sm">Dashboard</h1>
-            <div className="bank-option text-[1px] text-[#0D28A6] cursor-pointer h-[57px]  w-[82px] absolute top-[63px] left-0">
-              test
+            <div className="p-2 flex flex-col justify-center items-center h-14 pt-6">
+                <h1 className="bg-[#CFD4ED] p-2 py-2">logo</h1>
             </div>
-          </div>
-
-          <Link to="/car">
+           
+                <div
+                    className={`p-2 flex flex-col cursor-pointer justify-center items-center h-14 bg-[#acb5df]`}>
+                    <img src="home-logo.png" alt="" />
+                    <h1 className="text-white text-sm">Dashboard</h1>
+                    <div className="bank-option text-[1px] text-[#0D28A6] cursor-pointer h-[57px]  w-[82px] absolute top-[63px] left-0">
+                        test
+                    </div>
+                </div>
+        
+            <Link to="/car">
             <div
-              className={`p-2 flex cursor-pointer flex-col justify-center items-center h-14`}
+                className={`p-2 flex cursor-pointer flex-col justify-center items-center h-14 `}
             >
-              <img src="truck-logo.png" alt="" />
-              <h1 className="text-white text-sm">Cars</h1>
-              <div className="bank-option  text-[1px] text-[#0D28A6] h-[57px]  w-[82px] absolute top-[126px] left-0">
-                test
-              </div>
+                <img src="truck-logo.png" alt="" />
+                <h1 className="text-white text-sm">Cars</h1>
+                <div className="bank-option  text-[1px] text-[#0D28A6] h-[57px]  w-[82px] absolute top-[126px] left-0">
+                    test
+                </div>
             </div>
-          </Link>
+            </Link>
         </div>
-      </div>
+    </div>
 
-      <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full">
+
         {/* bar search */}
         <div className="w-full bg-[#ffffff] shadow-md h-max p-3 flex ">
-          <h1 className="bg-[#CFD4ED] p-2 px-6 w-max">Logo</h1>
-          <div className="w-full ml-40 flex justify-between items-center">
-            {/* Hamburger menu Toggle */}
-            <div className=" ">
-              <div className="menu-toggle" onClick={handleToggleMenu}>
-                <input type="checkbox" />
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </div>
-            <div className="flex">
-              <div className="flex items-center pl-5 gap-1 pr-5">
-                <img
-                  src="luffy.jpeg"
-                  alt=""
-                  className="w-[40px] h-[40px] rounded-full cursor-pointer"
-                />
-                <p className="text-sm">user 123</p>
-                <img
-                  src="fi_chevron-down.png"
-                  alt=""
-                  onClick={handdleDropdownToggle}
-                  className={`${
-                    dropdownToggle ? "rotate-180" : ""
-                  } transition transition-timing-function: ease-in-out transition-duration: 0.5s`}
-                />
-              <div className="flex items-center pl-5 gap-5 pr-5">
-                <div className="flex items-center">
-                  <div className="relative">
-                    <input
-                      onChange={handleSearchChange}
-                      type="text"
-                      value={localSearchTerm}
-                      onKeyPress={handleSearchKeyPress}
-                      className="border-[2px] bordder-[#999999] p-2 outline-none placeholder:pl-8"
-                      placeholder="Search"
-                    />
-                    <img
-                      src="../../fi_search.png"
-                      alt=""
-                      className={`absolute top-3 left-3 ${localSearchTerm ? "hidden" : ""
-                        }`}
-                    />
-                  </div>
-                  <button
-                    onClick={handleSearchSubmit}
-                    className="border-[2px] border-[#0D28A6] text-[#0D28A6] font-medium p-2"
-                  >
-                    Search
-                  </button>
+            <h1 className="bg-[#CFD4ED] p-2 px-6 w-max">Logo</h1>
+            <div className="w-full ml-40 flex justify-between items-center">
+                {/* Hamburger menu Toggle */}
+                <div className=" ">
+                    <div className="menu-toggle" onClick={handleToggleMenu}>
+                        <input type="checkbox" />
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
                 </div>
-                
-                <div className="flex items-center gap-2">
-                  <img
-                    src="luffy.jpeg"
-                    alt=""
-                    className="w-[40px] h-[40px] rounded-full cursor-pointer"
-                  />
-                  <p className="text-sm">user 123</p>
-                  <img
-                    src="fi_chevron-down.png"
-                    alt=""
-                    onClick={handdleDropdownToggle}
-                    className={`${dropdownToggle ? "rotate-180" : ""
-                      } transition transition-timing-function: ease-in-out transition-duration: 0.5s`}
-                  />
+                <div className="flex">
+                    <>
+                        <div className="relative">
+                            <input
+                                onChange={handleSearchChange}
+                                type="text"
+                                value={localSearchTerm}
+                                onKeyPress={handleSearchKeyPress}
+                                className="border-[2px] bordder-[#999999] p-2 outline-none placeholder:pl-8"
+                                placeholder="Search"
+                            />
+                            <img
+                                src="fi_search.png"
+                                alt=""
+                                className={`absolute top-3 left-3 ${localSearchTerm ? "hidden" : ""
+                                    }`}
+                            />
+                        </div>
+                        <button
+                            onClick={handleSearchSubmit}
+                            className="border-[2px] border-[#0D28A6] text-[#0D28A6] font-medium p-2"
+                        >
+                            Search
+                        </button>
+                    </>
+                    <div className="flex items-center pl-5 gap-2 pr-5">
+                        <img
+                            src="luffy.jpeg"
+                            alt=""
+                            className="w-[40px] h-[40px] rounded-full cursor-pointer"
+                        />
+                        <p className="text-sm">user 123</p>
+                        <img
+                            src="fi_chevron-down.png"
+                            alt=""
+                            onClick={handdleDropdownToggle}
+                            className={`${dropdownToggle ? "rotate-180" : ""
+                                } transition transition-timing-function: ease-in-out transition-duration: 0.5s`}
+                        />
+                        {dropdownToggle ? (
+                            <div className="flex justify-center items-center w-[150px] h-[70px] rounded-sm bg-[#ffffff] absolute top-16 right-0 p-4">
+                                <button
+                                    onClick={handleLogout}
+                                    className="text-[#ffffff] font-medium p-2 bg-[#FA2C5A] rounded-lg"
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        ) : null}
+                    </div>
                 </div>
-                {dropdownToggle ? (
-                  <div className="flex justify-center items-center w-[150px] h-[70px] rounded-sm bg-[#ffffff] absolute top-16 right-0 p-4">
-                    <button
-                      onClick={handleLogout}
-                      className="text-[#ffffff] font-medium p-2 bg-[#FA2C5A] rounded-lg"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                ) : null}
-              </div>
             </div>
-          </div>
         </div>
 
         {/* Wrapper Content */}
         <div className="w-full flex">
-          {/* Toggle Sidebar */}
-          {toggleMenu ? (
-            <div className=" w-[220px] h-[100%] bg-[#ffffff]">
-              <div className="">
-                <div className="flex flex-col gap-4 pt-4 ">
-                  <h1 className="font-medium text-[#999999] pl-4">Dashboard</h1>
-                  <h1 className="font-medium text-sm bg-[#CFD4ED] pl-4 p-2 py-3">
-                    Dashboard
-                  </h1>
+            {/* Toggle Sidebar */}
+            {toggleMenu ? (
+                <div className=" w-[220px] h-[100%] bg-[#ffffff]">
+                    <div className="">
+                        <div className="flex flex-col gap-4 pt-4 ">
+                            <h1 className="font-medium text-[#999999] pl-4">Car</h1>
+                            <h1 className="font-medium text-sm bg-[#CFD4ED] pl-4 p-2 py-3">
+                                List Car
+                            </h1>
+                        </div>
+                    </div>
                 </div>
-              </div>
+            ) : null}
+
+            {/* Main Content */}
+            <div className={`w-full  bg-[#f5f6ff]`}>
+                {/* nav */}
+                <div className="flex gap-2 items-center pl-8 pt-5">
+                    <p className="font-medium text-lg">
+                        <p>Cars</p>
+                    </p>
+                    <p className="font-bold text-2xl ">&gt;</p>
+                    <p className="tex-sm font-medium text-[#999999]">
+                        <p>List Cars</p>
+                    </p>
             </div>
-          ) : null}
+            
+            <div className="w-full px-8">
+              {/* Chart */}
+              <div className=" overflow-hidden">
+     <div className=" pt-10 gap-4 flex flex-col justify-center w-11/12">
+           <p className=" font-medium">Month</p>
+           <div className="flex gap-5">
+             <input
+               type="date"
+               value={dateFrom}
+               className="border px-2"
+               onChange={handleGetDateFrom}
+             />
+             <input
+               type="date"
+               value={dateUntil}
+               className="border px-2"
+               onChange={handleGetDateUntil}
+             />
+             <button
+               className="bg-[#0D28A6] text-white p-2 font-medium rounded-lg px-5"
+               onClick={getReportData}
+             >
+               {" "}
+               Go
+             </button>
+           </div>
+           <div id="chart" className="w-full">
+             <Chart
+               options={OptionsColumChart.options}
+               series={OptionsColumChart.series}
+               type="bar"
+             />
+           </div>
+           <div id="html-dist"></div>
+         </div> 
 
-          {/* Main Content */}
-          <div className="w-full h-[100%] bg-[#f5f6ff]">
-            {/* nav */}
-            <div className="flex gap-2 items-center pl-8 pt-5">
-              <p className="font-medium text-lg">Dashboard</p>
-              <p className="font-bold text-2xl ">&gt;</p>
-              <p className="tex-lg font-medium ">Dashboard</p>
-            </div>
-
-            {/* Header */}
-            <div className="w-[94%] mx-auto pt-10 ">
-              <div className="w-full flex flex-col">
-                <div className="flex gap-2 items-center">
-                  <span className="bg-[#0D28A6] w-[7px] h-[25px]"></span>
-                  <h1 className="text-lg font-semibold">
-                    Rented Car Data Visualization
-                  </h1>
-                </div>
-
-                {/* Chart */}
-                <div className=" pt-10 gap-4 flex flex-col justify-center w-full">
-                  <p className=" font-medium">Month</p>
-                  <div className="flex gap-5">
-                    <input
-                      type="date"
-                      value={dateFrom}
-                      className="border px-2"
-                      onChange={handleGetDateFrom}
-                    />
-                    <input
-                      type="date"
-                      value={dateUntil}
-                      className="border px-2"
-                      onChange={handleGetDateUntil}
-                    />
-                    <button
-                      className="bg-[#0D28A6] text-white p-2 font-medium rounded-lg px-5"
-                      onClick={getReportData}
-                    >
-                      {" "}
-                      Go
-                    </button>
-                  </div>
-                  <div id="chart" className="w-full">
-                    <Chart
-                      options={OptionsColumChart.options}
-                      series={OptionsColumChart.series}
-                      type="bar"
-                    />
-                  </div>
-                  <div id="html-dist"></div>
-                </div>
-
-                {/* List Order */}
-                <div className="pb-20">
-                  <h1 className="text-xl font-bold">Dashboard</h1>
-                  <div className="flex gap-2 items-center pt-5">
-                    <span className="bg-[#0D28A6] w-[7px] h-[25px]"></span>
-                    <h1 className="text-lg font-semibold ">List Order</h1>
-                  </div>
-                  <div className="flex gap-2 items-center pt-5">
-                    <DataTable
-                      columns={columns}
-                      data={listOrder}
-                      progressPending={loading}
-                      pagination
-                      paginationServer
-                      paginationTotalRows={totalRows}
-                      onChangeRowsPerPage={handlePerRowsChange}
-                      onChangePage={handlePageChange}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+                   {/* List Order */}
+     <div className="pb-20">    <h1 className="text-xl font-bold">Dashboard</h1>
+    <div className="flex gap-2 items-center pt-5">
+      <span className="bg-[#0D28A6] w-[7px] h-[25px]"></span>
+      <h1 className="text-lg font-semibold ">List Order</h1>
     </div>
-  );
-};
+    <div className="flex flex-col gap-2 items-center pt-5">
+      <DataTable
+       columns={columns}
+       data={listOrder}
+       progressPending={loading}
+        pagination
+        paginationServer
+        paginationTotalRows={totalRows}
+        onChangeRowsPerPage={handlePerRowsChange}
+        onChangePage={handlePageChange}
+      />
+    </div>
+</div>
+</div>
+
+            </div>
+
+          
+
+
+
+              
+
+               
+
+               
+
+
+            </div>
+        </div>
+    </div>
+</div>
+  )
+}
+
+
 
 export default DashboardPage;
+
+
+
+
+
+  
+
+
+ 
