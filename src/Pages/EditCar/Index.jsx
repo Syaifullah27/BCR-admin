@@ -7,44 +7,34 @@ import { useParams } from "react-router-dom"
 import axios from "axios"
 import { useEffect } from "react"
 import { PopupContext } from "../../context/messagePopup"
-import { Searchcars } from "../../context/searchCars"
-import { fetchData } from "../../redux-toolkit/features/menuSlice"
+import { fetchData, setSearchTerm } from "../../redux-toolkit/features/menuSlice"
 import { useDispatch } from "react-redux"
+import { useSelector } from "react-redux"
 
 const EditCarPage = () => {
     const navigate = useNavigate()
     const id = useParams().id
     const [car, setCar] = useState([])
     const dispatch = useDispatch();
-    // console.log(id);
-    
-    // eslint-disable-next-line no-unused-vars
-    const [searchCar, setSearchCar] = useState("")
     const [toggleMenu, setToggleMenu] = useState(false)
     const inputRef = useRef(null)
     const [img, setImg] = useState(null)
     const [image, setImage] = useState("")
     const [images, setImages] = useState(null)
-
+    const { showPopupMessage } = useContext(PopupContext);
+    const [dropdownToggle, setDropdownToggle] = useState(false)
     const [form, setForm] = useState({
         name: "",
         category: "",
         price: "",
         status: false,
     });
-
-    // eslint-disable-next-line no-unused-vars
-    const { popupMessage, showPopupMessage, showPopup } = useContext(PopupContext);
-    // eslint-disable-next-line no-unused-vars
-    const { search, setSearch } = useContext(Searchcars);
-    const [dropdownToggle, setDropdownToggle] = useState(false)
+    const { searchTerm } = useSelector((state) => state.data);
+    const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
 
 
 
 
-    const handleSearchCar = (e) => {
-        setSearchCar(e.target.value)
-    }
 
     const handdleDropdownToggle = () => {
         setDropdownToggle(!dropdownToggle)
@@ -83,8 +73,6 @@ const EditCarPage = () => {
             })
             setImg(res.data.image)
             setImage(res.data.image)
-            // setImage(res.data.image)
-            // console.log(image);
         } catch (error) {
             console.log(error);
         }
@@ -96,7 +84,7 @@ const EditCarPage = () => {
 
     console.log(car);
 
-    // console.log();
+
 
 
     const handdleEditCar = async () => {
@@ -128,14 +116,24 @@ const EditCarPage = () => {
     }
 
 
-
-
-
-
-    const handleSearch = (e) => {
-        e.preventDefault();
-        // dispatch(getMenu(search));
+    // Handle Search Car
+    const handleSearchChange = (e) => {
+        setLocalSearchTerm(e.target.value);
     };
+
+    const handleSearchSubmit = () => {
+        navigate('/car')
+        dispatch(setSearchTerm(localSearchTerm));
+    }
+
+    const handleSearchKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleSearchSubmit();
+        }
+    };
+
+
 
     const handleToggleMenu = () => {
         setToggleMenu(!toggleMenu)
@@ -157,6 +155,12 @@ const EditCarPage = () => {
     const handleImgClik = () => {
         inputRef.current.click()
     }
+
+
+
+
+
+
 
     return (
         <div className="flex ">
@@ -194,53 +198,57 @@ const EditCarPage = () => {
                 <div className="w-full bg-[#ffffff] shadow-md h-max p-3 flex ">
                     <h1 className="bg-[#CFD4ED] p-2 px-6 w-max">Logo</h1>
                     <div className="w-full ml-40 flex justify-between items-center">
-                       {/* Hamburger menu Toggle */}
+                        {/* Hamburger menu Toggle */}
                         <div className=" ">
                             <div className="menu-toggle" onClick={handleToggleMenu}>
-                            <input type="checkbox" />
-                            <span></span>
-                            <span></span>
-                            <span></span>
+                                <input type="checkbox" />
+                                <span></span>
+                                <span></span>
+                                <span></span>
                             </div>
                         </div>
                         <div className="flex">
-                            <>
-                                <div className="relative">
-                                    <input
-                                        onChange={handleSearchCar}
-                                        type="text"
-                                        value={search}
-                                        className="border-[2px] bordder-[#999999] p-2 outline-none placeholder:pl-8"
-                                        placeholder="Search"
-                                    />
+                            <div className="flex items-center pl-5 gap-5 pr-5">
+                                <div className="flex items-center">
+                                    <div className="relative">
+                                        <input
+                                            onChange={handleSearchChange}
+                                            type="text"
+                                            value={localSearchTerm}
+                                            onKeyPress={handleSearchKeyPress}
+                                            className="border-[2px] bordder-[#999999] p-2 outline-none placeholder:pl-8"
+                                            placeholder="Search"
+                                        />
+                                        <img
+                                            src="../../fi_search.png"
+                                            alt=""
+                                            className={`absolute top-3 left-3 ${localSearchTerm ? "hidden" : ""
+                                                }`}
+                                        />
+                                    </div>
+                                    <button
+                                        onClick={handleSearchSubmit}
+                                        className="border-[2px] border-[#0D28A6] text-[#0D28A6] font-medium p-2"
+                                    >
+                                        Search
+                                    </button>
+                                </div>
+
+                                <div className="flex items-center gap-2">
                                     <img
-                                        src="../../fi_search.png"
+                                        src="../../luffy.jpeg"
                                         alt=""
-                                        className={`absolute top-3 left-3 ${search ? "hidden" : ""
-                                            }`}
+                                        className="w-[40px] h-[40px] rounded-full cursor-pointer"
+                                    />
+                                    <p className="text-sm">user 123</p>
+                                    <img
+                                        src="../../fi_chevron-down.png"
+                                        alt=""
+                                        onClick={handdleDropdownToggle}
+                                        className={`${dropdownToggle ? "rotate-180" : ""
+                                            } transition transition-timing-function: ease-in-out transition-duration: 0.5s`}
                                     />
                                 </div>
-                                <button
-                                    onClick={handleSearch}
-                                    className="border-[2px] border-[#0D28A6] text-[#0D28A6] font-medium p-2"
-                                >
-                                    Search
-                                </button>
-                            </>
-                            <div className="flex items-center pl-5 gap-1 pr-5">
-                                <img
-                                    src="../../luffy.jpeg"
-                                    alt=""
-                                    className="w-[40px] h-[40px] rounded-full cursor-pointer"
-                                />
-                                <p className="text-sm">user 123</p>
-                                <img
-                                    src="../../fi_chevron-down.png"
-                                    alt=""
-                                    onClick={handdleDropdownToggle}
-                                    className={`${dropdownToggle ? "rotate-180" : ""
-                                        } transition transition-timing-function: ease-in-out transition-duration: 0.5s`}
-                                />
                                 {dropdownToggle ? (
                                     <div className="flex justify-center items-center w-[150px] h-[70px] rounded-sm bg-[#ffffff] absolute top-16 right-0 p-4 z-50">
                                         <button

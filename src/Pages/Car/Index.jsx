@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import axios from "axios";
 import { formatKategoryCars, formatRupiah, formatTanggalIndo } from "../../utils/formater";
+import Skeleton from "../../Components/skeleton";
 
 const CarPage = () => {
     const navigate = useNavigate();
@@ -16,12 +17,7 @@ const CarPage = () => {
     const [toggleMenu, setToggleMenu] = useState(false);
     const [dropdownToggle, setDropdownToggle] = useState(false);
     const { popupMessage, showPopup, showPopupMessage } = useContext(PopupContext);
-    // const [selectCapacityCar, setSelectCapacityCar] = useState("All");
-    
-    
-    // const handleSelectCapacityCar = (e) => {
-    //     setSelectCapacityCar(e.target.value);
-    // };
+
 
     const handleToggleMenu = () => {
         setToggleMenu(!toggleMenu);
@@ -39,21 +35,22 @@ const CarPage = () => {
 
 
     // Get List car
-    const { data, status, currentPage, totalPages, searchTerm, capacity   } = useSelector((state) => state.data);
+    const { data, status, currentPage, totalPages, searchTerm, capacity } = useSelector((state) => state.data);
     const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
     const [localCapacity, setLocalCapacity] = useState(capacity);
     console.log(data);
 
     useEffect(() => {
-        dispatch(fetchData({ page: currentPage, searchTerm, capacity  }));
-    }, [dispatch, currentPage, searchTerm, capacity ]);
+        dispatch(fetchData({ page: currentPage, searchTerm, capacity }));
+    }, [dispatch, currentPage, searchTerm, capacity]);
+
 
     const handlePageChange = (page) => {
-        // window.scrollTo({ top: 0, behavior: "smooth" });
+        window.scrollTo({ top: 0, behavior: "smooth" });
         dispatch(setPage(page));
     };
 
-    const containerClassName = data?.cars && data?.cars?.length > 0 ? 'data-container' : 'empty-container';
+    const dataNotFound = data?.cars && data?.cars?.length > 0 ? 'data-container' : 'empty-container' && status === "loading" ? 'data-container' : 'empty-container';
 
 
 
@@ -62,10 +59,16 @@ const CarPage = () => {
         setLocalSearchTerm(e.target.value);
     };
 
-    const handleSearchSubmit = (e) => {
-        e.preventDefault();
+    const handleSearchSubmit = () => {
         dispatch(setSearchTerm(localSearchTerm));
         dispatch(setPage(1)); // Reset to the first page on new search
+    };
+
+    const handleSearchKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleSearchSubmit();
+        }
     };
 
 
@@ -78,7 +81,7 @@ const CarPage = () => {
 
 
 
-    
+
     // Delete Car
     const [showPopupDelete, setShowPopupDelete] = useState(false);
     const [carId, setCarId] = useState();
@@ -96,31 +99,31 @@ const CarPage = () => {
 
 
 
-                const config = {
-                    headers: {
-                        "Access-Control-Allow-Origin": "*",
-                        "Content-Type": "multipart/form-data",
-                        access_token:
-                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGJjci5pbyIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTY2NTI0MjUwOX0.ZTx8L1MqJ4Az8KzoeYU2S614EQPnqk6Owv03PUSnkzc",
-                    },
-                };
-        
-                try {
-                    const res = await axios.delete(
-                        `https://api-car-rental.binaracademy.org/admin/car/${id}`,
-                        config
-                    );
-                    setShowPopupDelete(false);
-                    console.log(res);
-                    showPopupMessage("Data Berhasil Dihapus");
-                    dispatch(fetchData({ page: currentPage, searchTerm, capacity  }));
-                } catch (error) {
-                    console.log(error);
-                    showPopupMessage("Terjadi kesalahan saat menghapus data mobil");
-                }
+        const config = {
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Content-Type": "multipart/form-data",
+                access_token:
+                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGJjci5pbyIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTY2NTI0MjUwOX0.ZTx8L1MqJ4Az8KzoeYU2S614EQPnqk6Owv03PUSnkzc",
+            },
+        };
+
+        try {
+            const res = await axios.delete(
+                `https://api-car-rental.binaracademy.org/admin/car/${id}`,
+                config
+            );
+            setShowPopupDelete(false);
+            console.log(res);
+            showPopupMessage("Data Berhasil Dihapus");
+            dispatch(fetchData({ page: currentPage, searchTerm, capacity }));
+        } catch (error) {
+            console.log(error);
+            showPopupMessage("Terjadi kesalahan saat menghapus data mobil");
+        }
     };
 
-    
+
 
 
 
@@ -177,6 +180,7 @@ const CarPage = () => {
                                         onChange={handleSearchChange}
                                         type="text"
                                         value={localSearchTerm}
+                                        onKeyPress={handleSearchKeyPress}
                                         className="border-[2px] bordder-[#999999] p-2 outline-none placeholder:pl-8"
                                         placeholder="Search"
                                     />
@@ -194,7 +198,7 @@ const CarPage = () => {
                                     Search
                                 </button>
                             </>
-                            <div className="flex items-center pl-5 gap-1 pr-5">
+                            <div className="flex items-center pl-5 gap-2 pr-5">
                                 <img
                                     src="luffy.jpeg"
                                     alt=""
@@ -240,7 +244,7 @@ const CarPage = () => {
                     ) : null}
 
                     {/* Main Content */}
-                    <div className={`w-full ${containerClassName} bg-[#f5f6ff]`}>
+                    <div className={`w-full ${dataNotFound} bg-[#f5f6ff]`}>
                         {/* nav */}
                         <div className="flex gap-2 items-center pl-8 pt-5">
                             <p className="font-medium text-lg">
@@ -263,12 +267,12 @@ const CarPage = () => {
                                     <h1 className="text-center font-medium text-lg">Menghapus Data Mobil</h1>
                                     <p className="text-center text-sm text-[]">Setelah dihapus, data mobil tidak dapat dikembalikan. Yakin ingin menghapus?</p>
                                     <div className="flex gap-4 pb-2">
-                                    <button
-                                        onClick={ () => handleDeleteCar(carId) }
-                                        className="bg-[#0D28A6] text-white p-2 font-medium rounded-sm w-24">Ya</button>
-                                    <button
-                                        onClick={() => setShowPopupDelete(false)}
-                                        className="border-[2px] border-[#0D28A6] text-[#0D28A6] p-2 font-medium rounded-sm w-24">Tidak</button>
+                                        <button
+                                            onClick={() => handleDeleteCar(carId)}
+                                            className="bg-[#0D28A6] text-white p-2 font-medium rounded-sm w-24">Ya</button>
+                                        <button
+                                            onClick={() => setShowPopupDelete(false)}
+                                            className="border-[2px] border-[#0D28A6] text-[#0D28A6] p-2 font-medium rounded-sm w-24">Tidak</button>
                                     </div>
                                 </div>
                             </div>
@@ -348,52 +352,59 @@ const CarPage = () => {
 
                         {/* List Car */}
                         <div className="px-8 pt-6 flex flex-wrap gap-10">
-                            {status === 'loading' && <p>Loading...</p>} 
-                            {status === 'failed' && <p>Eror fetching data</p>} 
+                            {status === 'loading' && <div className="flex flex-wrap gap-10">
+                                <Skeleton />
+                                <Skeleton />
+                                <Skeleton />
+                                <Skeleton />
+                                <Skeleton />
+                                <Skeleton />
+                            </div>}
+                            {status === 'failed' && <p>Eror fetching data</p>}
                             {status === 'succeeded' && <div className="flex flex-wrap gap-10">
-                                {data?.cars?.length === 0  && <p>No data</p>}
+                                {data?.cars?.length === 0 && <p>No data</p>}
                                 {
-                                data?.cars?.map((item, index) => {
-                                    return (
-                                        <div key={index} className="w-[351px]  bg-[#ffffff] shadow-md border rounded-md flex flex-col p-4 gap-4">
-                                            <div className="w-full flex justify-center pt-6">
-                                                <img src={item.image ? item.image : "noImage.jpg"} alt="" className="w-[270px] h-[160px] rounded-lg" />
-                                            </div>
-                                            <div className="flex flex-col gap-3">
-                                                <h1 className="font-medium">{item.name}</h1>
-                                                <h1 className="text-lg font-semibold">{formatRupiah(item.price)} / hari</h1>
-                                                <div className="flex gap-2 items-center">
-                                                    <img src="fi_users.png" alt="" />
-                                                    <p className="text-sm">{formatKategoryCars(item.category)}</p>
+                                    data?.cars?.map((item, index) => {
+                                        return (
+                                            <div key={index} className="w-[351px]  bg-[#ffffff] shadow-md border rounded-md flex flex-col p-4 gap-4">
+                                                <div className="w-full flex justify-center pt-6">
+                                                    <img src={item.image ? item.image : "noImage.jpg"} alt="" className="w-[270px] h-[160px] rounded-lg" />
                                                 </div>
-                                                <div className="flex gap-2 items-center">
-                                                    <img src="fi_clock.png" alt="" />
-                                                    <p className="text-sm">{formatTanggalIndo(item.updatedAt)}</p>
-                                                </div>
-                                                <div className="flex gap-6 pt-4 pb-2">
-                                                    <button
-                                                        onClick={() => handleConfirmDelete(item.id)}
-                                                        className="border-2 border-[#FA2C5A] w-1/2 p-2 rounded-sm text-[#FA2C5A] font-medium flex gap-2 items-center justify-center">
-                                                        <img src="fi_trash-2.png" alt="" className="" />
-                                                        Delete
-                                                    </button>
-                                                    <Link
-                                                        className="w-1/2"
-                                                        to={`/edit-car/${item.id}`}>
+                                                <div className="flex flex-col gap-3">
+                                                    <h1 className="font-medium">{item.name}</h1>
+                                                    <h1 className="text-lg font-semibold">{formatRupiah(item.price)} / hari</h1>
+                                                    <div className="flex gap-2 items-center">
+                                                        <img src="fi_users.png" alt="" />
+                                                        <p className="text-sm">{formatKategoryCars(item.category)}</p>
+                                                    </div>
+                                                    <div className="flex gap-2 items-center">
+                                                        <img src="fi_clock.png" alt="" />
+                                                        <p className="text-sm">{formatTanggalIndo(item.updatedAt)}</p>
+                                                    </div>
+                                                    <div className="flex gap-6 pt-4 pb-2">
                                                         <button
-                                                            className="border w-full p-2 rounded-sm bg-[#5CB85F] text-[#ffffff] font-medium flex gap-2 items-center justify-center">
-                                                            <img src="fi_edit.png" alt="" />
-                                                            Edit
+                                                            onClick={() => handleConfirmDelete(item.id)}
+                                                            className="border-2 border-[#FA2C5A] w-1/2 p-2 rounded-sm text-[#FA2C5A] font-medium flex gap-2 items-center justify-center">
+                                                            <img src="fi_trash-2.png" alt="" className="" />
+                                                            Delete
                                                         </button>
-                                                    </Link>
+                                                        <Link
+                                                            className="w-1/2"
+                                                            to={`/edit-car/${item.id}`}>
+                                                            <button
+                                                                className="border w-full p-2 rounded-sm bg-[#5CB85F] text-[#ffffff] font-medium flex gap-2 items-center justify-center">
+                                                                <img src="fi_edit.png" alt="" />
+                                                                Edit
+                                                            </button>
+                                                        </Link>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    )
-                                })
-                            }
+                                        )
+                                    })
+                                }
                             </div>
-                            } 
+                            }
                         </div>
 
                         <div className={`flex justify-center gap-5 py-10 mr-[75px]`}>
