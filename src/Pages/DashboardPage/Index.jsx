@@ -5,16 +5,23 @@ import { useEffect } from "react";
 import "chart.js/auto";
 import Chart from "react-apexcharts";
 import axios from "axios";
-import '../Test/test.css'
+import "../Test/test.css";
+import DataTable from "react-data-table-component";
 import { useSelector } from "react-redux";
 import { setSearchTerm } from "../../redux-toolkit/features/menuSlice";
 import { useDispatch } from "react-redux";
+
 
 const DashboardPage = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate();
   const [toggleMenu, setToggleMenu] = useState(false);
   const [dropdownToggle, setDropdownToggle] = useState(false);
+  const [listOrder, setListOrder] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [totalRows, setTotalRows] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
   const { searchTerm   } = useSelector((state) => state.data);
   const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
 
@@ -68,15 +75,109 @@ const DashboardPage = () => {
         config
       );
       setDataReports(res.data);
+      setTotalRows(res.data.total);
       console.log(res.data);
     } catch (error) {
       console.log(error?.response);
     }
   };
 
+  const [sortFrom, setSortFrom] = useState("");
+  const getListOrder = async (page, size = perPage) => {
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGJjci5pbyIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTcxODg5MDY2MH0.WLWnMOa5rwS7RVe1zdPMrSnn2-jbpRKjnoO-44YhIDw";
+    const config = {
+      headers: {
+        access_token: `${token}`,
+      },
+    };
+    try {
+      const res = await axios.get(
+        `https://api-car-rental.binaracademy.org/admin/v2/order?page=${page}&pageSize=${size}`,
+        config
+      );
+      setListOrder(res.data.orders);
+      setLoading(false);
+      console.log(res.data);
+    } catch (error) {
+      console.log(error?.response);
+      setLoading(false);
+    }
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    getListOrder(page);
+  };
+
+  const handlePerRowsChange = async (newPerPage, page) => {
+    setPerPage(newPerPage);
+    getListOrder(page, newPerPage);
+  };
+
   useEffect(() => {
     getReportData();
-  }, []);
+    getListOrder(currentPage);
+  }, [currentPage]);
+
+  const columns = [
+    {
+      name: "No",
+      selector: (row) => row.id,
+      sortable: true,
+    },
+    {
+      name: "User Email",
+      selector: (row) => row.User.email,
+      sortable: true,
+    },
+    {
+      name: "Car",
+      selector: (row) => row.CarId,
+      sortable: true,
+    },
+    {
+      name: "Start Rent",
+      selector: (row) => row.start_rent_at,
+      sortable: true,
+    },
+    {
+      name: "Finish Rent",
+      selector: (row) => row.finish_rent_at,
+      sortable: true,
+    },
+    {
+      name: "Price",
+      selector: (row) => row.total_price,
+      sortable: true,
+    },
+    {
+      name: "Category",
+      selector: (row) => row.User.role,
+      sortable: true,
+    },
+  ];
+
+  const dataId = listOrder.map((item) => {
+    return item.id;
+  });
+  const dataEmail = listOrder.map((item) => {
+    return item.User.email;
+  });
+
+  // console.log("data order", dataOrder);
+
+  // const data = [
+  //   {
+  //     no: 1,
+  //     email: "test",
+  //     car: "Beetlejuice",
+  //     startrent: "1988",
+  //     finishrent: "1988",
+  //     price: "1988",
+  //     category: "1988",
+  //   },
+  // ];
 
   const [dataReports, setDataReports] = useState([]);
 
@@ -182,7 +283,6 @@ const DashboardPage = () => {
   };
 
   return (
-
     <div className="flex">
       {/* Navbar Left Side */}
       <div className="bg-[#0D28A6]">
@@ -192,7 +292,8 @@ const DashboardPage = () => {
           </div>
 
           <div
-            className={`p-2 flex flex-col cursor-pointer justify-center items-center h-14  bg-[#acb5df]`}>
+            className={`p-2 flex flex-col cursor-pointer justify-center items-center h-14  bg-[#acb5df]`}
+          >
             <img src="home-logo.png" alt="" />
             <h1 className="text-white text-sm">Dashboard</h1>
             <div className="bank-option text-[1px] text-[#0D28A6] cursor-pointer h-[57px]  w-[82px] absolute top-[63px] left-0">
@@ -201,7 +302,9 @@ const DashboardPage = () => {
           </div>
 
           <Link to="/car">
-            <div className={`p-2 flex cursor-pointer flex-col justify-center items-center h-14`}>
+            <div
+              className={`p-2 flex cursor-pointer flex-col justify-center items-center h-14`}
+            >
               <img src="truck-logo.png" alt="" />
               <h1 className="text-white text-sm">Cars</h1>
               <div className="bank-option  text-[1px] text-[#0D28A6] h-[57px]  w-[82px] absolute top-[126px] left-0">
@@ -213,12 +316,10 @@ const DashboardPage = () => {
       </div>
 
       <div className="flex flex-col w-full">
-
         {/* bar search */}
         <div className="w-full bg-[#ffffff] shadow-md h-max p-3 flex ">
           <h1 className="bg-[#CFD4ED] p-2 px-6 w-max">Logo</h1>
           <div className="w-full ml-40 flex justify-between items-center">
-
             {/* Hamburger menu Toggle */}
             <div className=" ">
               <div className="menu-toggle" onClick={handleToggleMenu}>
@@ -229,6 +330,21 @@ const DashboardPage = () => {
               </div>
             </div>
             <div className="flex">
+              <div className="flex items-center pl-5 gap-1 pr-5">
+                <img
+                  src="luffy.jpeg"
+                  alt=""
+                  className="w-[40px] h-[40px] rounded-full cursor-pointer"
+                />
+                <p className="text-sm">user 123</p>
+                <img
+                  src="fi_chevron-down.png"
+                  alt=""
+                  onClick={handdleDropdownToggle}
+                  className={`${
+                    dropdownToggle ? "rotate-180" : ""
+                  } transition transition-timing-function: ease-in-out transition-duration: 0.5s`}
+                />
               <div className="flex items-center pl-5 gap-5 pr-5">
                 <div className="flex items-center">
                   <div className="relative">
@@ -303,7 +419,6 @@ const DashboardPage = () => {
 
           {/* Main Content */}
           <div className="w-full h-[100%] bg-[#f5f6ff]">
-
             {/* nav */}
             <div className="flex gap-2 items-center pl-8 pt-5">
               <p className="font-medium text-lg">Dashboard</p>
@@ -362,19 +477,26 @@ const DashboardPage = () => {
                     <span className="bg-[#0D28A6] w-[7px] h-[25px]"></span>
                     <h1 className="text-lg font-semibold ">List Order</h1>
                   </div>
+                  <div className="flex gap-2 items-center pt-5">
+                    <DataTable
+                      columns={columns}
+                      data={listOrder}
+                      progressPending={loading}
+                      pagination
+                      paginationServer
+                      paginationTotalRows={totalRows}
+                      onChangeRowsPerPage={handlePerRowsChange}
+                      onChangePage={handlePageChange}
+                    />
+                  </div>
                 </div>
               </div>
-
-
-
-
             </div>
           </div>
         </div>
       </div>
     </div>
-
-  )
+  );
 };
 
 export default DashboardPage;
