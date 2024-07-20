@@ -366,12 +366,12 @@ const CarPage = () => {
                                 {
                                     data?.cars?.map((item, index) => {
                                         return (
-                                            <div key={index} className="w-[351px]  bg-[#ffffff] shadow-md border rounded-md flex flex-col p-4 gap-4">
-                                                <div className="w-full flex justify-center pt-6">
-                                                    <img src={item.image ? item.image : "noImage.jpg"} alt="" className="w-[270px] h-[160px] rounded-lg" />
+                                            <div key={index} className={`  bg-[#ffffff] shadow-md border rounded-md flex flex-col p-4 gap-8 ${toggleMenu ? "w-[310px]" : "w-[351px]"}`}>
+                                                <div className="w-full flex justify-center pt-2">
+                                                    <img src={item.image ? item.image : "noImage.jpg"} alt="" className="w-[310px] h-[160px] rounded-lg" />
                                                 </div>
                                                 <div className="flex flex-col gap-3">
-                                                    <h1 className="font-medium">{item.name}</h1>
+                                                    <h1 className="font-medium">{item.name} / {item.category}</h1>
                                                     <h1 className="text-lg font-semibold">{formatRupiah(item.price)} / hari</h1>
                                                     <div className="flex gap-2 items-center">
                                                         <img src="fi_users.png" alt="" />
