@@ -248,8 +248,24 @@ const DashboardPage = () => {
 let arrayOrder = countOrder;
 let hasil = hitungOrderDanJumlahkanNilai(arrayOrder);
 
-console.log(`Jumlah Order: ${hasil.jumlahOrder}`);
-console.log(`Total Nilai: ${hasil.totalNilai}`);
+  
+// console.log(`Jumlah Order: ${hasil.jumlahOrder}`);
+//   console.log(`Total Nilai: ${hasil.totalNilai}`);
+  
+
+
+function ambilTanggalDariArray(array) {
+  return array.map(item => {
+      let tanggalArray = item.split('-');
+      return tanggalArray[2];
+  });
+}
+
+// Contoh penggunaan
+let arrayTanggal = day;
+let tanggalArray = ambilTanggalDariArray(arrayTanggal);
+
+console.log(tanggalArray); // Output: ["01", "15", "20"]
 
   const OptionsColumChart = {
     series: [
@@ -298,7 +314,7 @@ console.log(`Total Nilai: ${hasil.totalNilai}`);
       },
 
       xaxis: {
-        categories: day,
+        categories: tanggalArray,
         position: "bottom",
         axisBorder: {
           show: false,
