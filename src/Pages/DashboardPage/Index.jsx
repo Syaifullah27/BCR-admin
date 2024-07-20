@@ -304,7 +304,7 @@ console.log(tanggalArray); // Output: ["01", "15", "20"]
       dataLabels: {
         enabled: true,
         formatter: function (val) {
-          return val + "%";
+          return val + "";
         },
         offsetY: -30,
         style: {
