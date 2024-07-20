@@ -299,7 +299,7 @@ console.log(`Total Nilai: ${hasil.totalNilai}`);
 
       xaxis: {
         categories: day,
-        position: "top",
+        position: "bottom",
         axisBorder: {
           show: false,
         },
@@ -458,7 +458,7 @@ console.log(`Total Nilai: ${hasil.totalNilai}`);
 
         {/* Wrapper Content */}
         <div className="w-full flex">
-          
+
           {/* Toggle Sidebar */}
           {toggleMenu ? (
             <div className=" w-[220px] h-[100%] bg-[#ffffff]">
