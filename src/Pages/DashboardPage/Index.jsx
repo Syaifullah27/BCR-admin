@@ -276,12 +276,12 @@ console.log(tanggalArray); // Output: ["01", "15", "20"]
     ],
     options: {
       chart: {
-        height: 350,
+        height: 200,
         type: "bar",
       },
       plotOptions: {
         bar: {
-          borderRadius: 7,
+          borderRadius: 6,
           colors: {
             ranges: [
               {
@@ -308,8 +308,8 @@ console.log(tanggalArray); // Output: ["01", "15", "20"]
         },
         offsetY: -30,
         style: {
-          fontSize: "12px",
-          colors: ["#000000"],
+          fontSize: "14px",
+          colors: ["#444"],
         },
       },
 
@@ -348,14 +348,14 @@ console.log(tanggalArray); // Output: ["01", "15", "20"]
         labels: {
           show: false,
           formatter: function (val) {
-            return val + "%";
+            return val + "";
           },
         },
       },
       title: {
         text: `Hasil Rental Bulanan ${hasil.totalNilai === 0 ? '' :  `: ${hasil.totalNilai}`} `,
         floating: true,
-        offsetY: 330,
+        offsetY: 300,
         align: "center",
         style: {
           color: "#444",
@@ -504,7 +504,7 @@ console.log(tanggalArray); // Output: ["01", "15", "20"]
 
             <div className="w-full px-8">
               <div className=" overflow-hidden">
-                <div className=" pt-10 gap-4 flex flex-col justify-center w-11/12">
+                <div className=" pt-10 gap-4 flex flex-col items-start w-11/12">
                   <p className=" font-medium">Month</p>
 
                   {/* Date Range Picker */}
@@ -543,7 +543,8 @@ console.log(tanggalArray); // Output: ["01", "15", "20"]
                 </div>
 
                 {/* List Order */}
-                <div className="pb-20">    <h1 className="text-xl font-bold">Dashboard</h1>
+                <div className="pb-20">
+                  <h1 className="text-xl font-bold">Dashboard</h1>
                   <div className="flex gap-2 items-center pt-5">
                     <span className="bg-[#0D28A6] w-[7px] h-[25px]"></span>
                     <h1 className="text-lg font-semibold ">List Order</h1>
