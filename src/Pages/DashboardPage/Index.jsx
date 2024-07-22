@@ -11,10 +11,10 @@ import { useSelector } from "react-redux";
 import { setSearchTerm } from "../../redux-toolkit/features/menuSlice";
 import { useDispatch } from "react-redux";
 import { formatDateID, formatRupiah } from "../../utils/formater";
-
+import { useParams } from "react-router-dom";
 
 const DashboardPage = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [toggleMenu, setToggleMenu] = useState(false);
   const [dropdownToggle, setDropdownToggle] = useState(false);
@@ -23,10 +23,9 @@ const DashboardPage = () => {
   const [totalRows, setTotalRows] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
+
   const { searchTerm } = useSelector((state) => state.data);
   const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
-
-
 
   // Handle Search Car
   const handleSearchChange = (e) => {
@@ -34,17 +33,16 @@ const DashboardPage = () => {
   };
 
   const handleSearchSubmit = () => {
-    navigate('/car')
+    navigate("/car");
     dispatch(setSearchTerm(localSearchTerm));
-  }
+  };
 
   const handleSearchKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
       handleSearchSubmit();
     }
   };
-
 
   const handleToggleMenu = () => {
     setToggleMenu(!toggleMenu);
@@ -59,15 +57,14 @@ const DashboardPage = () => {
     navigate("/login");
   };
 
-
   // handle chart
-  const [month, setMonth] = useState('');
-  const [year, setYear] = useState('');
-  const [dateRange, setDateRange] = useState({ start: '', end: '' });
+  const [month, setMonth] = useState("");
+  const [year, setYear] = useState("");
+  const [dateRange, setDateRange] = useState({ start: "", end: "" });
 
   useEffect(() => {
     const today = new Date();
-    const currentMonth = (today.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based in JavaScript
+    const currentMonth = (today.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-based in JavaScript
     const currentYear = today.getFullYear().toString();
     setMonth(currentMonth);
     setYear(currentYear);
@@ -82,51 +79,43 @@ const DashboardPage = () => {
   };
 
   const getDateRange = () => {
-    const start_date = `${year}-${month.padStart(2, '0')}-01`;
+    const start_date = `${year}-${month.padStart(2, "0")}-01`;
     let end_date;
 
-    if (month === '02') {
-      end_date = `${year}-${month.padStart(2, '0')}-${year % 4 === 0 ? 29 : 28}`;
-    } else if (['04', '06', '09', '11'].includes(month)) {
-      end_date = `${year}-${month.padStart(2, '0')}-30`;
+    if (month === "02") {
+      end_date = `${year}-${month.padStart(2, "0")}-${
+        year % 4 === 0 ? 29 : 28
+      }`;
+    } else if (["04", "06", "09", "11"].includes(month)) {
+      end_date = `${year}-${month.padStart(2, "0")}-30`;
     } else {
-      end_date = `${year}-${month.padStart(2, '0')}-31`;
+      end_date = `${year}-${month.padStart(2, "0")}-31`;
     }
 
     setDateRange({ start: start_date, end: end_date });
   };
 
   const months = [
-    { value: '01', label: 'January' },
-    { value: '02', label: 'February' },
-    { value: '03', label: 'March' },
-    { value: '04', label: 'April' },
-    { value: '05', label: 'May' },
-    { value: '06', label: 'June' },
-    { value: '07', label: 'July' },
-    { value: '08', label: 'August' },
-    { value: '09', label: 'September' },
-    { value: '10', label: 'October' },
-    { value: '11', label: 'November' },
-    { value: '12', label: 'December' },
+    { value: "01", label: "January" },
+    { value: "02", label: "February" },
+    { value: "03", label: "March" },
+    { value: "04", label: "April" },
+    { value: "05", label: "May" },
+    { value: "06", label: "June" },
+    { value: "07", label: "July" },
+    { value: "08", label: "August" },
+    { value: "09", label: "September" },
+    { value: "10", label: "October" },
+    { value: "11", label: "November" },
+    { value: "12", label: "December" },
   ];
 
   const years = Array.from(new Array(50), (val, index) => index + 2000); // 2000 to 2049
-
-
-
-
 
   // const [dateFrom, setDateFrom] = useState("");
   // const [dateUntil, setDateUntil] = useState("");
 
   // console.log(dateFrom, dateUntil);
-
-
-
-
-
-
 
   const getReportData = async () => {
     const token =
@@ -142,7 +131,6 @@ const DashboardPage = () => {
         config
       );
       setDataReports(res.data);
-      setTotalRows(res.data.total);
       console.log(res.data);
     } catch (error) {
       console.log(error?.response);
@@ -151,6 +139,7 @@ const DashboardPage = () => {
 
   // const [sortFrom, setSortFrom] = useState("");
   const getListOrder = async (page, size = perPage) => {
+    setLoading(true);
     const token =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGJjci5pbyIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTcxODg5MDY2MH0.WLWnMOa5rwS7RVe1zdPMrSnn2-jbpRKjnoO-44YhIDw";
     const config = {
@@ -164,8 +153,9 @@ const DashboardPage = () => {
         config
       );
       setListOrder(res.data.orders);
+      setTotalRows(res.data.count);
       setLoading(false);
-      console.log(res.data);
+      console.log(res.data.count);
     } catch (error) {
       console.log(error?.response);
       setLoading(false);
@@ -178,8 +168,29 @@ const DashboardPage = () => {
   };
 
   const handlePerRowsChange = async (newPerPage, page) => {
-    setPerPage(newPerPage);
-    getListOrder(page, newPerPage);
+    setLoading(true);
+
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGJjci5pbyIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTcxODg5MDY2MH0.WLWnMOa5rwS7RVe1zdPMrSnn2-jbpRKjnoO-44YhIDw";
+    const config = {
+      headers: {
+        access_token: `${token}`,
+      },
+    };
+    try {
+      const res = await axios.get(
+        `https://api-car-rental.binaracademy.org/admin/v2/order?page=${page}&pageSize=${newPerPage}`,
+        config
+      );
+      setListOrder(res.data.orders);
+      setPerPage(newPerPage);
+      getListOrder(page, newPerPage);
+      setLoading(false);
+      console.log(res.data);
+    } catch (error) {
+      console.log(error?.response);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -225,11 +236,10 @@ const DashboardPage = () => {
     },
     {
       name: "Status",
-      
-      sortable: true,
-    }
-  ];
 
+      sortable: true,
+    },
+  ];
 
   const [dataReports, setDataReports] = useState([]);
 
@@ -246,32 +256,32 @@ const DashboardPage = () => {
 
   function hitungOrderDanJumlahkanNilai(array) {
     let jumlahOrder = array.length;
-    let totalNilai = array.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    let totalNilai = array.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
+    );
     return { jumlahOrder, totalNilai };
-}
+  }
 
-// Contoh penggunaan
-let arrayOrder = countOrder;
-let hasil = hitungOrderDanJumlahkanNilai(arrayOrder);
+  // Contoh penggunaan
+  let arrayOrder = countOrder;
+  let hasil = hitungOrderDanJumlahkanNilai(arrayOrder);
 
-  
-// console.log(`Jumlah Order: ${hasil.jumlahOrder}`);
-//   console.log(`Total Nilai: ${hasil.totalNilai}`);
-  
+  // console.log(`Jumlah Order: ${hasil.jumlahOrder}`);
+  //   console.log(`Total Nilai: ${hasil.totalNilai}`);
 
-
-function ambilTanggalDariArray(array) {
-  return array.map(item => {
-      let tanggalArray = item.split('-');
+  function ambilTanggalDariArray(array) {
+    return array.map((item) => {
+      let tanggalArray = item.split("-");
       return tanggalArray[2];
-  });
-}
+    });
+  }
 
-// Contoh penggunaan
-let arrayTanggal = day;
-let tanggalArray = ambilTanggalDariArray(arrayTanggal);
+  // Contoh penggunaan
+  let arrayTanggal = day;
+  let tanggalArray = ambilTanggalDariArray(arrayTanggal);
 
-// console.log(tanggalArray); // Output: ["01", "15", "20"]
+  // console.log(tanggalArray); // Output: ["01", "15", "20"]
 
   const OptionsColumChart = {
     series: [
@@ -359,7 +369,9 @@ let tanggalArray = ambilTanggalDariArray(arrayTanggal);
         },
       },
       title: {
-        text: `Hasil Rental Bulanan ${hasil.totalNilai === 0 ? '' :  `: ${hasil.totalNilai}`} `,
+        text: `Hasil Rental Bulanan ${
+          hasil.totalNilai === 0 ? "" : `: ${hasil.totalNilai}`
+        } `,
         floating: true,
         offsetY: 300,
         align: "center",
@@ -387,7 +399,8 @@ let tanggalArray = ambilTanggalDariArray(arrayTanggal);
           </div>
 
           <div
-            className={`p-2 flex flex-col cursor-pointer justify-center items-center h-14 bg-[#acb5df]`}>
+            className={`p-2 flex flex-col cursor-pointer justify-center items-center h-14 bg-[#acb5df]`}
+          >
             <img src="home-logo.png" alt="" />
             <h1 className="text-white text-sm">Dashboard</h1>
             <div className="bank-option text-[1px] text-[#0D28A6] cursor-pointer h-[57px]  w-[82px] absolute top-[63px] left-0">
@@ -410,7 +423,6 @@ let tanggalArray = ambilTanggalDariArray(arrayTanggal);
       </div>
 
       <div className="flex flex-col w-full">
-
         {/* bar search */}
         <div className="w-full bg-[#ffffff] shadow-md h-max p-3 flex ">
           <h1 className="bg-[#CFD4ED] p-2 px-6 w-max">Logo</h1>
@@ -438,8 +450,9 @@ let tanggalArray = ambilTanggalDariArray(arrayTanggal);
                   <img
                     src="fi_search.png"
                     alt=""
-                    className={`absolute top-3 left-3 ${localSearchTerm ? "hidden" : ""
-                      }`}
+                    className={`absolute top-3 left-3 ${
+                      localSearchTerm ? "hidden" : ""
+                    }`}
                   />
                 </div>
                 <button
@@ -460,8 +473,9 @@ let tanggalArray = ambilTanggalDariArray(arrayTanggal);
                   src="fi_chevron-down.png"
                   alt=""
                   onClick={handdleDropdownToggle}
-                  className={`${dropdownToggle ? "rotate-180" : ""
-                    } transition transition-timing-function: ease-in-out transition-duration: 0.5s`}
+                  className={`${
+                    dropdownToggle ? "rotate-180" : ""
+                  } transition transition-timing-function: ease-in-out transition-duration: 0.5s`}
                 />
                 {dropdownToggle ? (
                   <div className="flex justify-center items-center w-[150px] h-[70px] rounded-sm bg-[#ffffff] absolute top-16 right-0 p-4">
@@ -480,7 +494,6 @@ let tanggalArray = ambilTanggalDariArray(arrayTanggal);
 
         {/* Wrapper Content */}
         <div className="w-full flex">
-
           {/* Toggle Sidebar */}
           {toggleMenu ? (
             <div className=" w-[220px] h-[100%] bg-[#ffffff]">
@@ -515,25 +528,40 @@ let tanggalArray = ambilTanggalDariArray(arrayTanggal);
 
                   {/* Date Range Picker */}
                   <div className="flex border w-max rounded-l-sm">
-                      <select value={month} onChange={handleMonthChange} className="appearance-none p-2 outline-none ">
-                        <option value="" disabled>Select Month</option>
-                        {months.map((month) => (
-                          <option key={month.value} value={month.value}>
-                            {month.label}
-                          </option>
-                        ))}
-                      </select>
-                      <select value={year} onChange={handleYearChange} className="appearance-none p-2 outline-none">
-                        <option value="" disabled>Select Year</option>
-                        {years.map((year) => (
-                          <option key={year} value={year}>
-                            {year}
-                          </option>
-                        ))}
-                      </select>
+                    <select
+                      value={month}
+                      onChange={handleMonthChange}
+                      className="appearance-none p-2 outline-none "
+                    >
+                      <option value="" disabled>
+                        Select Month
+                      </option>
+                      {months.map((month) => (
+                        <option key={month.value} value={month.value}>
+                          {month.label}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      value={year}
+                      onChange={handleYearChange}
+                      className="appearance-none p-2 outline-none"
+                    >
+                      <option value="" disabled>
+                        Select Year
+                      </option>
+                      {years.map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
+                    </select>
                     <button
                       className="bg-[#0D28A6] text-white p-2 font-medium rounded-r-sm px-5 active:bg-[#100e7c]"
-                      onClick={getDateRange}>{" "}Go
+                      onClick={getDateRange}
+                    >
+                      {" "}
+                      Go
                     </button>
                   </div>
 
@@ -574,9 +602,7 @@ let tanggalArray = ambilTanggalDariArray(arrayTanggal);
         </div>
       </div>
     </div>
-  )
-}
-
-
+  );
+};
 
 export default DashboardPage;
