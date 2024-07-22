@@ -47,3 +47,25 @@ export const formatTanggalIndo = (tanggalStr) => {
 
     return `${hari} ${bulan} ${tahun}, ${jam}:${menit.toString().padStart(2, '0')}`;
 }
+
+
+export const formatDateID = (tanggalStr) => {
+    const bulanIndo = [
+        "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    ];
+
+    // Parse string ISO 8601 menjadi objek Date
+    const tanggal = new Date(tanggalStr);
+
+    // Validasi apakah tanggal valid
+    if (isNaN(tanggal)) {
+        throw new Error("Input harus berupa string tanggal yang valid dalam format ISO 8601");
+    }
+
+    const hari = tanggal.getDate();
+    const bulan = bulanIndo[tanggal.getMonth()];
+    const tahun = tanggal.getFullYear();
+
+    return `${hari} ${bulan} ${tahun}`;
+};

@@ -10,6 +10,7 @@ import DataTable from "react-data-table-component";
 import { useSelector } from "react-redux";
 import { setSearchTerm } from "../../redux-toolkit/features/menuSlice";
 import { useDispatch } from "react-redux";
+import { formatDateID, formatRupiah } from "../../utils/formater";
 
 
 const DashboardPage = () => {
@@ -116,16 +117,16 @@ const DashboardPage = () => {
 
 
 
-
-
-
-
-
-
   // const [dateFrom, setDateFrom] = useState("");
   // const [dateUntil, setDateUntil] = useState("");
 
   // console.log(dateFrom, dateUntil);
+
+
+
+
+
+
 
   const getReportData = async () => {
     const token =
@@ -204,17 +205,17 @@ const DashboardPage = () => {
     },
     {
       name: "Start Rent",
-      selector: (row) => row.start_rent_at,
+      selector: (row) => formatDateID(row.start_rent_at),
       sortable: true,
     },
     {
       name: "Finish Rent",
-      selector: (row) => row.finish_rent_at,
+      selector: (row) => formatDateID(row.finish_rent_at),
       sortable: true,
     },
     {
       name: "Price",
-      selector: (row) => row.total_price,
+      selector: (row) => formatRupiah(row.total_price),
       sortable: true,
     },
     {
@@ -222,6 +223,11 @@ const DashboardPage = () => {
       selector: (row) => row.User.role,
       sortable: true,
     },
+    {
+      name: "Status",
+      
+      sortable: true,
+    }
   ];
 
 
@@ -235,8 +241,8 @@ const DashboardPage = () => {
     return c.orderCount;
   });
 
-  console.log(countOrder);
-  console.log(day)
+  // console.log(countOrder);
+  // console.log(day)
 
   function hitungOrderDanJumlahkanNilai(array) {
     let jumlahOrder = array.length;
@@ -265,7 +271,7 @@ function ambilTanggalDariArray(array) {
 let arrayTanggal = day;
 let tanggalArray = ambilTanggalDariArray(arrayTanggal);
 
-console.log(tanggalArray); // Output: ["01", "15", "20"]
+// console.log(tanggalArray); // Output: ["01", "15", "20"]
 
   const OptionsColumChart = {
     series: [
