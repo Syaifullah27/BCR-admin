@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import { formatKategoryCars, formatRupiah, formatTanggalIndo } from "../../utils/formater";
 import Skeleton from "../../Components/skeleton";
+import Pagination from "../../Components/pagination";
 
 const CarPage = () => {
     const navigate = useNavigate();
@@ -57,6 +58,12 @@ const CarPage = () => {
     // Handle Search Car
     const handleSearchChange = (e) => {
         setLocalSearchTerm(e.target.value);
+    };
+
+    const handleClearSearch = () => {
+        setLocalSearchTerm('');
+        dispatch(setSearchTerm(''));
+        dispatch(setPage(1)); // Reset to the first page on new search
     };
 
     const handleSearchSubmit = () => {
@@ -183,7 +190,14 @@ const CarPage = () => {
                                         onKeyPress={handleSearchKeyPress}
                                         className="border-[2px] bordder-[#999999] p-2 outline-none placeholder:pl-8"
                                         placeholder="Search"
-                                    />
+                                    /> 
+                                     {
+                                        localSearchTerm ? (
+                                            <button
+                                            onClick={handleClearSearch}
+                                            className="absolute top-3 right-3 border bg-[#ffffff] flex justify-center items-center text-center  text-slate-400  rounded-full p-1 h-6 w-6">X</button>
+                                        ) : null
+                                    }
                                     <img
                                         src="fi_search.png"
                                         alt=""
@@ -407,18 +421,11 @@ const CarPage = () => {
                             }
                         </div>
 
-                        <div className={`flex justify-center gap-5 py-10 mr-[75px]`}>
-                            {Array.from({ length: totalPages }, (_, index) => (
-                                <button
-                                    className={`bg-[#ffffff] border p-2 px-5 rounded-sm font-medium text-sm ${currentPage === index + 1 ? 'bg-[#CFD4ED] border-[1px] border-blue-900' : 'opacity-40'}`}
-                                    key={index}
-                                    onClick={() => handlePageChange(index + 1)}
-                                    disabled={currentPage === index + 1}
-                                >
-                                    {index + 1}
-                                </button>
-                            ))}
-                        </div>
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                        />
 
 
                     </div>
