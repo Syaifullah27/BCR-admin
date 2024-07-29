@@ -12,6 +12,9 @@ import { setSearchTerm } from "../../redux-toolkit/features/menuSlice";
 import { useDispatch } from "react-redux";
 import { formatDateID, formatRupiah } from "../../utils/formater";
 import { useParams } from "react-router-dom";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 const DashboardPage = () => {
   const dispatch = useDispatch();
@@ -57,60 +60,41 @@ const DashboardPage = () => {
     navigate("/login");
   };
 
-  // handle chart
-  const [month, setMonth] = useState("");
-  const [year, setYear] = useState("");
-  const [dateRange, setDateRange] = useState({ start: "", end: "" });
+ {/* nav */}
+ <div className="flex gap-2 items-center pl-8 pt-5">
+ <p className="font-medium text-lg">
+   <p>Dashboard</p>
+ </p>
+ <p className="font-bold text-2xl ">&gt;</p>
+ <p className="tex-sm font-medium text-[#999999]">
+   <p>Dashboard</p>
+ </p>
+</div>
+{/* Header */}
+<div className="px-8 flex gap-2 items-center pt-14">
+     <span className="bg-[#0D28A6] w-[7px] h-[25px]"></span>
+     <h1 className="text-lg font-semibold ">Rented Car Data Visualization</h1>
+</div>
+// handle chart
+const [selectedDate, setSelectedDate] = useState(new Date());
+const [dateRange, setDateRange] = useState({ start: "", end: "" });
+useEffect(() => {
+compareDates(selectedDate);
+}, [selectedDate]);
+const handleDateChange = (date) => {
+setSelectedDate(date);
+};
+const compareDates = (date) => {
+const year = date.getFullYear();
+const month = date.getMonth();
+// eslint-disable-next-line no-unused-vars
+const startOfMonth = new Date(year, month, 1);
+const endOfMonth = new Date(year, month + 1, 0);
+const formattedStartDate = `${year}-${(month + 1).toString().padStart(2, '0')}-01`;
+const formattedEndDate = `${year}-${(month + 1).toString().padStart(2, '0')}-${endOfMonth.getDate()}`;
 
-  useEffect(() => {
-    const today = new Date();
-    const currentMonth = (today.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-based in JavaScript
-    const currentYear = today.getFullYear().toString();
-    setMonth(currentMonth);
-    setYear(currentYear);
-  }, []);
-
-  const handleMonthChange = (e) => {
-    setMonth(e.target.value);
-  };
-
-  const handleYearChange = (e) => {
-    setYear(e.target.value);
-  };
-
-  const getDateRange = () => {
-    const start_date = `${year}-${month.padStart(2, "0")}-01`;
-    let end_date;
-
-    if (month === "02") {
-      end_date = `${year}-${month.padStart(2, "0")}-${
-        year % 4 === 0 ? 29 : 28
-      }`;
-    } else if (["04", "06", "09", "11"].includes(month)) {
-      end_date = `${year}-${month.padStart(2, "0")}-30`;
-    } else {
-      end_date = `${year}-${month.padStart(2, "0")}-31`;
-    }
-
-    setDateRange({ start: start_date, end: end_date });
-  };
-
-  const months = [
-    { value: "01", label: "January" },
-    { value: "02", label: "February" },
-    { value: "03", label: "March" },
-    { value: "04", label: "April" },
-    { value: "05", label: "May" },
-    { value: "06", label: "June" },
-    { value: "07", label: "July" },
-    { value: "08", label: "August" },
-    { value: "09", label: "September" },
-    { value: "10", label: "October" },
-    { value: "11", label: "November" },
-    { value: "12", label: "December" },
-  ];
-
-  const years = Array.from(new Array(50), (val, index) => index + 2000); // 2000 to 2049
+setDateRange({ start: formattedStartDate, end: formattedEndDate });
+};
 
   // const [dateFrom, setDateFrom] = useState("");
   // const [dateUntil, setDateUntil] = useState("");
@@ -193,10 +177,30 @@ const DashboardPage = () => {
     }
   };
 
-  useEffect(() => {
-    getReportData();
-    getListOrder(currentPage);
-  }, [currentPage, dateRange]);
+  
+
+    // Fungsi untuk memperbarui status ke true
+    const updateStatus = async (id) => {
+      console.log(id)
+      const config = {
+        headers: {
+          access_token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGJjci5pbyIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTY2NTI0MjUwOX0.ZTx8L1MqJ4Az8KzoeYU2S614EQPnqk6Owv03PUSnkzc`,
+          }
+      };
+      const payload = {
+        status: id,
+      }
+      try {
+        const res = await axios.patch(`https://api-car-rental.binaracademy.org/admin/order/${id}`, payload, config);
+        getListOrder(currentPage, perPage);
+        handlePerRowsChange(perPage, currentPage);
+        console.log(res.data);
+      } catch (err) {
+          console.error('Error updating status:', err);
+      }
+  };
+
+
 
   const columns = [
     {
@@ -236,10 +240,18 @@ const DashboardPage = () => {
     },
     {
       name: "Status",
-
+      selector: (row) => <btn onClick={() => updateStatus(row.id)}
+                          className="border-2 border-gray-100 rounded-xl text-gray-800 bg-gray-100 p-2 py-4 font-medium text-sm cursor-pointer">{row.status === true ? "Done" : "Pending"}</btn>,
       sortable: true,
     },
   ];
+
+  useEffect(() => {
+    getReportData();
+    getListOrder(currentPage);
+    updateStatus();
+    
+  }, [currentPage, dateRange, perPage, ]);
 
   const [dataReports, setDataReports] = useState([]);
 
@@ -499,9 +511,9 @@ const DashboardPage = () => {
             <div className=" w-[220px] h-[100%] bg-[#ffffff]">
               <div className="">
                 <div className="flex flex-col gap-4 pt-4 ">
-                  <h1 className="font-medium text-[#999999] pl-4">Car</h1>
+                  <h1 className="font-medium text-[#999999] pl-4">Dashboard</h1>
                   <h1 className="font-medium text-sm bg-[#CFD4ED] pl-4 p-2 py-3">
-                    List Car
+                    Dashboard
                   </h1>
                 </div>
               </div>
@@ -510,15 +522,20 @@ const DashboardPage = () => {
 
           {/* Main Content */}
           <div className={`w-full  bg-[#f5f6ff]`}>
-            {/* nav */}
-            <div className="flex gap-2 items-center pl-8 pt-5">
+           {/* nav */}
+           <div className="flex gap-2 items-center pl-8 pt-5">
               <p className="font-medium text-lg">
-                <p>Cars</p>
+                <p>Dashboard</p>
               </p>
               <p className="font-bold text-2xl ">&gt;</p>
               <p className="tex-sm font-medium text-[#999999]">
-                <p>List Cars</p>
+                <p>Dashboard</p>
               </p>
+            </div>
+            {/* Header */}
+            <div className="px-8 flex gap-2 items-center pt-14">
+                  <span className="bg-[#0D28A6] w-[7px] h-[25px]"></span>
+                  <h1 className="text-lg font-semibold ">Rented Car Data Visualization</h1>
             </div>
 
             <div className="w-full px-8">
@@ -526,43 +543,22 @@ const DashboardPage = () => {
                 <div className=" pt-10 gap-4 flex flex-col items-start w-11/12">
                   <p className=" font-medium">Month</p>
 
-                  {/* Date Range Picker */}
-                  <div className="flex border w-max rounded-l-sm">
-                    <select
-                      value={month}
-                      onChange={handleMonthChange}
-                      className="appearance-none p-2 outline-none "
-                    >
-                      <option value="" disabled>
-                        Select Month
-                      </option>
-                      {months.map((month) => (
-                        <option key={month.value} value={month.value}>
-                          {month.label}
-                        </option>
-                      ))}
-                    </select>
-                    <select
-                      value={year}
-                      onChange={handleYearChange}
-                      className="appearance-none p-2 outline-none"
-                    >
-                      <option value="" disabled>
-                        Select Year
-                      </option>
-                      {years.map((year) => (
-                        <option key={year} value={year}>
-                          {year}
-                        </option>
-                      ))}
-                    </select>
+                   {/* Date Range Picker */}
+                   <div className="flex">
+                    <div className="relative w-max">
+                      <DatePicker
+                        className=" border-2 p-2 outline-none rounded-sm w-[150px]"
+                        selected={selectedDate}
+                        onChange={handleDateChange}
+                        dateFormat="MM/yyyy"
+                        showMonthYearPicker
+                        showFullMonthYearPicker
+                      />
+                        <img src="chevron-down.png" alt="" className="absolute top-3 right-3" width={25} height={25}/>
+                    </div>
+                    
                     <button
-                      className="bg-[#0D28A6] text-white p-2 font-medium rounded-r-sm px-5 active:bg-[#100e7c]"
-                      onClick={getDateRange}
-                    >
-                      {" "}
-                      Go
-                    </button>
+                      className="relative bg-[#0D28A6] text-white p-2 font-medium px-4 rounded-r-sm">Go</button>
                   </div>
 
                   {/* Chart */}

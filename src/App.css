@@ -84,3 +84,8 @@ html {
     align-items: center;
     z-index: 1000; /* Ensuring it is above other content */
 }
+
+div.react-datepicker{
+    position: relative;
+    left: 26px;
+}
