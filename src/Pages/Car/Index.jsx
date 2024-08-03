@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useContext } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -10,6 +11,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import { formatKategoryCars, formatRupiah, formatTanggalIndo } from "../../utils/formater";
 import Skeleton from "../../Components/skeleton";
+import Pagination from "../../Components/pagination";
 
 const CarPage = () => {
     const navigate = useNavigate();
@@ -38,7 +40,7 @@ const CarPage = () => {
     const { data, status, currentPage, totalPages, searchTerm, capacity } = useSelector((state) => state.data);
     const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
     const [localCapacity, setLocalCapacity] = useState(capacity);
-    console.log(data);
+    // console.log(data);
 
     useEffect(() => {
         dispatch(fetchData({ page: currentPage, searchTerm, capacity }));
@@ -71,6 +73,12 @@ const CarPage = () => {
         }
     };
 
+    const handleClearSearch = () => {
+        setLocalSearchTerm('');
+        dispatch(setSearchTerm(''));
+        dispatch(setPage(1)); // Reset to the first page on new search
+    };
+
 
     // handle select capacity
     const handleCapacityChange = (e) => {
@@ -85,7 +93,7 @@ const CarPage = () => {
     // Delete Car
     const [showPopupDelete, setShowPopupDelete] = useState(false);
     const [carId, setCarId] = useState();
-    console.log(carId);
+    // console.log(carId);
 
     const handleConfirmDelete = (id) => {
         setCarId(id);
@@ -114,7 +122,7 @@ const CarPage = () => {
                 config
             );
             setShowPopupDelete(false);
-            console.log(res);
+            // console.log(res);
             showPopupMessage("Data Berhasil Dihapus");
             dispatch(fetchData({ page: currentPage, searchTerm, capacity }));
         } catch (error) {
@@ -123,6 +131,10 @@ const CarPage = () => {
         }
     };
 
+
+    useEffect(() => {
+        fetchData()
+    },[])
 
 
 
@@ -184,6 +196,13 @@ const CarPage = () => {
                                         className="border-[2px] bordder-[#999999] p-2 outline-none placeholder:pl-8"
                                         placeholder="Search"
                                     />
+                                    {
+                                        localSearchTerm ? (
+                                            <button
+                                            onClick={handleClearSearch}
+                                            className="absolute top-3 right-3 border bg-[#ffffff] flex justify-center items-center text-center  text-slate-400  rounded-full p-1 h-6 w-6">X</button>
+                                        ) : null
+                                    }
                                     <img
                                         src="fi_search.png"
                                         alt=""
@@ -371,7 +390,7 @@ const CarPage = () => {
                                                     <img src={item.image ? item.image : "noImage.jpg"} alt="" className="w-[310px] h-[160px] rounded-lg" />
                                                 </div>
                                                 <div className="flex flex-col gap-3">
-                                                    <h1 className="font-medium">{item.name} / {item.category}</h1>
+                                                    <h1 className="font-medium">{item.name}</h1>
                                                     <h1 className="text-lg font-semibold">{formatRupiah(item.price)} / hari</h1>
                                                     <div className="flex gap-2 items-center">
                                                         <img src="fi_users.png" alt="" />
@@ -407,7 +426,13 @@ const CarPage = () => {
                             }
                         </div>
 
-                        <div className={`flex justify-center gap-5 py-10 mr-[75px]`}>
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                        />
+
+                        {/* <div className={`flex justify-center gap-5 py-10 mr-[75px]`}>
                             {Array.from({ length: totalPages }, (_, index) => (
                                 <button
                                     className={`bg-[#ffffff] border p-2 px-5 rounded-sm font-medium text-sm ${currentPage === index + 1 ? 'bg-[#CFD4ED] border-[1px] border-blue-900' : 'opacity-40'}`}
@@ -418,8 +443,7 @@ const CarPage = () => {
                                     {index + 1}
                                 </button>
                             ))}
-                        </div>
-
+                        </div> */}
 
                     </div>
                 </div>

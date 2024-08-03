@@ -6,7 +6,7 @@ import axios from "axios"
 import { useRef } from "react"
 import { PopupContext } from "../../context/messagePopup"
 import { useDispatch } from "react-redux"
-import { fetchData, setSearchTerm } from "../../redux-toolkit/features/menuSlice"
+import {  setSearchTerm } from "../../redux-toolkit/features/menuSlice"
 import { useSelector } from "react-redux"
 
 
@@ -48,7 +48,7 @@ const AddCarPage = () => {
     const handleImg = (e) => {
         const file = e.target.files[0]
         setImg(e.target.files[0].name)
-        console.log(e.target.files[0].name);
+        // console.log(e.target.files[0].name);
         setImage(URL.createObjectURL(file))
         setImages(e.target.files[0])
     }
@@ -116,11 +116,11 @@ const AddCarPage = () => {
 
 
         try {
+            // eslint-disable-next-line no-unused-vars
             const res = await axios.post("https://api-car-rental.binaracademy.org/admin/car", formData, config)
-            console.log(res);
+            // console.log(res);
             showPopupMessage('Data Berhasil Disimpan');
             navigate("/car")
-            dispatch(fetchData());
         } catch (error) {
             console.log(error);
             showPopupMessage('Terjadi kesalahan saat menambahkan data mobil');
@@ -129,6 +129,7 @@ const AddCarPage = () => {
 
 
 
+    
 
     return (
 

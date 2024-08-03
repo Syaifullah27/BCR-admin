@@ -7,7 +7,7 @@ const PopupProvider = ({ children }) => {
     const [popupMessage, setPopupMessage] = useState("");
     const [showPopup, setShowPopup] = useState(false);
 
-    console.log(popupMessage);
+    // console.log(popupMessage);
 
     const showPopupMessage = (message) => {
         setPopupMessage(message);

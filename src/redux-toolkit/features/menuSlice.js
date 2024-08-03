@@ -97,7 +97,7 @@ export const fetchData = createAsyncThunk('data/fetchData', async ({ searchTerm 
     const url = `https://api-car-rental.binaracademy.org/admin/v2/car?name=${searchTerm}&category=${category}&page=${page}&pageSize=9`;
     const response = await axios.get(url, config);
 
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
 }
 );

@@ -1,34 +1,16 @@
-import { useContext } from "react"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
-import { useRef } from "react"
-import { useParams } from "react-router-dom"
-import axios from "axios"
-import { useEffect } from "react"
-import { PopupContext } from "../../context/messagePopup"
-import { fetchData, setSearchTerm } from "../../redux-toolkit/features/menuSlice"
+import {  setSearchTerm } from "../../redux-toolkit/features/menuSlice"
 import { useDispatch } from "react-redux"
 import { useSelector } from "react-redux"
+import EditContent from "../../Components/EditTable"
 
 const EditCarPage = () => {
     const navigate = useNavigate()
-    const id = useParams().id
-    const [car, setCar] = useState([])
     const dispatch = useDispatch();
     const [toggleMenu, setToggleMenu] = useState(false)
-    const inputRef = useRef(null)
-    const [img, setImg] = useState(null)
-    const [image, setImage] = useState("")
-    const [images, setImages] = useState(null)
-    const { showPopupMessage } = useContext(PopupContext);
     const [dropdownToggle, setDropdownToggle] = useState(false)
-    const [form, setForm] = useState({
-        name: "",
-        category: "",
-        price: "",
-        status: false,
-    });
     const { searchTerm } = useSelector((state) => state.data);
     const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
 
@@ -46,74 +28,8 @@ const EditCarPage = () => {
     }
 
 
-    const handleForm = (e) => {
-        setForm({
-            ...form,
-            [e.target.name]: e.target.value
-        })
-    }
 
 
-    const getDataCar = async () => {
-        const config = {
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Content-Type": "multipart/form-data",
-                access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGJjci5pbyIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTY2NTI0MjUwOX0.ZTx8L1MqJ4Az8KzoeYU2S614EQPnqk6Owv03PUSnkzc"
-            }
-        }
-        try {
-            const res = await axios.get(`https://api-car-rental.binaracademy.org/admin/car/${id}`, config)
-            setCar(res.data)
-            setForm({
-                name: res.data.name,
-                category: res.data.category,
-                price: res.data.price,
-                status: res.data.status
-            })
-            setImg(res.data.image)
-            setImage(res.data.image)
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    useEffect(() => {
-        getDataCar()
-    }, [])
-
-    console.log(car);
-
-
-
-
-    const handdleEditCar = async () => {
-
-        const formData = new FormData()
-        formData.append("name", form.name)
-        formData.append("category", form.category)
-        formData.append("price", parseInt(form.price))
-        formData.append("status", form.status)
-        formData.append("image", images)
-
-        const config = {
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Content-Type": "multipart/form-data",
-                access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGJjci5pbyIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTY2NTI0MjUwOX0.ZTx8L1MqJ4Az8KzoeYU2S614EQPnqk6Owv03PUSnkzc"
-            }
-        }
-        try {
-            const res = await axios.put(`https://api-car-rental.binaracademy.org/admin/car/${id}`, formData, config)
-            console.log(res);
-            dispatch(fetchData());
-            showPopupMessage('Data Berhasil Diedit');
-            navigate("/car")
-        } catch (error) {
-            console.log(error);
-            showPopupMessage('Terjadi kesalahan saat mengedit data mobil');
-        }
-    }
 
 
     // Handle Search Car
@@ -138,24 +54,6 @@ const EditCarPage = () => {
     const handleToggleMenu = () => {
         setToggleMenu(!toggleMenu)
     }
-
-    const handleBackToListCars = () => {
-        navigate("/car")
-    }
-
-    const handleImg = (e) => {
-        const file = e.target.files[0]
-        console.log(e.target.files[0]);
-        setImg(e.target.files[0].name)
-        setImages(e.target.files[0])
-        console.log(e.target.files[0].name);
-        setImage(URL.createObjectURL(file))
-    }
-
-    const handleImgClik = () => {
-        inputRef.current.click()
-    }
-
 
 
 
@@ -293,71 +191,17 @@ const EditCarPage = () => {
                         </div>
 
                         {/* FORM Edit car */}
-                        <div className="px-8 pt-6 w-full flex flex-col justify-center">
-                            <h1 className="text-xl font-semibold">Add New Car</h1>
-                            <div className="w-full flex gap-20 bg-[#ffffff] mt-5 p-4">
-                                <div className="flex flex-col gap-7 pt-1">
-                                    <p>Nama / Tipe Mobil</p>
-                                    <p>Harga</p>
-                                    <p className="mt-3">Foto</p>
-                                    <p className="mt-5">Kategori</p>
-                                </div>
-                                <div className="flex flex-col gap-4">
-                                    <input
-                                        name="name"
-                                        type="text"
-                                        value={form.name}
-                                        onChange={handleForm}
-                                        placeholder="Input Nama / Tipe Mobil"
-                                        className="outline-none border p-2 w-[380px] placeholder:text-sm placeholder:pl-2 text-sm  pl-2" />
-                                    <input
-                                        name="price"
-                                        type="number"
-                                        value={form.price}
-                                        onChange={handleForm}
-                                        placeholder="Input Harga Sewa Mobil"
-                                        className="outline-none border p-2 w-[380px] placeholder:text-sm placeholder:pl-2 text-sm  pl-2" />
-                                    <div className="relative border p-2 pl-4 w-[380px] h-14" onClick={handleImgClik}>
-                                        {image ? <img src={image} alt="" className="w-10 h-10 border rounded-md" /> : <p className="text-[#949494] text-sm  absolute top-3 mt-1">Upload Foto Mobil</p>}
-                                        {
-                                            image ? <p className="text-[#1d1d20] text-sm  absolute top-3 mt-2 left-16">{img.substr(45) ? img.substr(0, 45) + "..." : img}</p> : null
-                                        }
-                                        <input
-                                            name="img"
-                                            ref={inputRef}
-                                            type="file"
-                                            onChange={handleImg}
-                                            placeholder="Upload Foto Mobil"
-                                            className="outline-none border p-2 w-[380px] placeholder:text-sm placeholder:pl-2 text-sm  pl-2 hidden" />
-                                        {/* <p className="text-[#999999] text-[10px] ml-2 absolute top-4">(masukan url)</p> */}
-                                        {
-                                            img ? null : <img src="../../fi_upload.png" alt="" className="absolute right-3 top-4 w-6 " />
-                                        }
-                                    </div>
-                                    <select
-                                        defaultValue={""}
-                                        name="category"
-                                        value={form.category}
-                                        onChange={handleForm}
-                                        className={`outline-none border p-2 w-[380px] ${form.category === "" ? "placeholder:text-sm placeholder:pl-2 text-sm text-gray-400" : ""}  ${form.category !== "" ? "appearance-none" : ""} text-sm  pl-3`}>
-                                        <option value="" className="text-white font-medium bg-blue-600" >Pilih Kategori Mobil</option>
-                                        <option value="small" className="text-slate-900 font-medium">2 - 4 orang</option>
-                                        <option value="medium" className="text-slate-900 font-medium">4 - 6 orang</option>
-                                        <option value="large" className="text-slate-900 font-medium">6 - 8 orang</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
+                        <EditContent />
 
 
-                        <div className="pl-8 flex gap-2 absolute bottom-10 left-30">
+                        {/* <div className="pl-8 flex gap-2 absolute bottom-10 left-30">
                             <button
                                 onClick={handleBackToListCars}
                                 className="border-[1px] border-[#0D28A6] text-[#0D28A6] font-medium p-1 px-5">Cancel</button>
                             <button
                                 onClick={handdleEditCar}
                                 className="bg-[#0D28A6] text-white font-medium p-1 px-5">Save</button>
-                        </div>
+                        </div> */}
                     </div>
 
                 </div>
@@ -367,3 +211,12 @@ const EditCarPage = () => {
 }
 
 export default EditCarPage
+
+
+
+
+
+
+
+
+
