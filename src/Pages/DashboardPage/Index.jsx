@@ -12,10 +12,10 @@ import { setSearchTerm } from "../../redux-toolkit/features/menuSlice";
 import { useDispatch } from "react-redux";
 import { formatDateID, formatRupiah } from "../../utils/formater";
 import DatePicker from "react-datepicker";
-import 'react-datepicker/dist/react-datepicker.css';
+import "react-datepicker/dist/react-datepicker.css";
 
-// eslint-disable-next-line react/prop-types, no-unused-vars
-const DashboardPage = ({ onDateChange }) => {
+
+const DashboardPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [toggleMenu, setToggleMenu] = useState(false);
@@ -25,6 +25,7 @@ const DashboardPage = ({ onDateChange }) => {
   const [totalRows, setTotalRows] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
+
   const { searchTerm } = useSelector((state) => state.data);
   const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
 
@@ -58,34 +59,44 @@ const DashboardPage = ({ onDateChange }) => {
     navigate("/login");
   };
 
-  // handle chart
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [dateRange, setDateRange] = useState({ start: "", end: "" });
+ {/* nav */}
+ <div className="flex gap-2 items-center pl-8 pt-5">
+ <p className="font-medium text-lg">
+   <p>Dashboard</p>
+ </p>
+ <p className="font-bold text-2xl ">&gt;</p>
+ <p className="tex-sm font-medium text-[#999999]">
+   <p>Dashboard</p>
+ </p>
+</div>
+{/* Header */}
+<div className="px-8 flex gap-2 items-center pt-14">
+     <span className="bg-[#0D28A6] w-[7px] h-[25px]"></span>
+     <h1 className="text-lg font-semibold ">Rented Car Data Visualization</h1>
+</div>
+// handle chart
+const [selectedDate, setSelectedDate] = useState(new Date());
+const [dateRange, setDateRange] = useState({ start: "", end: "" });
+useEffect(() => {
+compareDates(selectedDate);
+}, [selectedDate]);
+const handleDateChange = (date) => {
+setSelectedDate(date);
+};
+const compareDates = (date) => {
+const year = date.getFullYear();
+const month = date.getMonth();
+// eslint-disable-next-line no-unused-vars
+const startOfMonth = new Date(year, month, 1);
+const endOfMonth = new Date(year, month + 1, 0);
+const formattedStartDate = `${year}-${(month + 1).toString().padStart(2, '0')}-01`;
+const formattedEndDate = `${year}-${(month + 1).toString().padStart(2, '0')}-${endOfMonth.getDate()}`;
 
-  useEffect(() => {
-    compareDates(selectedDate);
-  }, [selectedDate]);
+setDateRange({ start: formattedStartDate, end: formattedEndDate });
+};
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-
-  const compareDates = (date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-
-    // eslint-disable-next-line no-unused-vars
-    const startOfMonth = new Date(year, month, 1);
-    const endOfMonth = new Date(year, month + 1, 0);
-
-    const formattedStartDate = `${year}-${(month + 1).toString().padStart(2, '0')}-01`;
-    const formattedEndDate = `${year}-${(month + 1).toString().padStart(2, '0')}-${endOfMonth.getDate()}`;
-
-    setDateRange({ start: formattedStartDate, end: formattedEndDate });
-  };
-
-
-
+  // const [dateFrom, setDateFrom] = useState("");
+  // const [dateUntil, setDateUntil] = useState("");
 
   // console.log(dateFrom, dateUntil);
 
@@ -103,7 +114,7 @@ const DashboardPage = ({ onDateChange }) => {
         config
       );
       setDataReports(res.data);
-      // console.log(res.data);
+      console.log(res.data);
     } catch (error) {
       console.log(error?.response);
     }
@@ -127,7 +138,7 @@ const DashboardPage = ({ onDateChange }) => {
       setListOrder(res.data.orders);
       setTotalRows(res.data.count);
       setLoading(false);
-      // console.log(res.data.count);
+      console.log(res.data.count);
     } catch (error) {
       console.log(error?.response);
       setLoading(false);
@@ -138,7 +149,7 @@ const DashboardPage = ({ onDateChange }) => {
     setCurrentPage(page);
     getListOrder(page);
   };
-  
+
   const handlePerRowsChange = async (newPerPage, page) => {
     setLoading(true);
 
@@ -158,36 +169,37 @@ const DashboardPage = ({ onDateChange }) => {
       setPerPage(newPerPage);
       getListOrder(page, newPerPage);
       setLoading(false);
-      // console.log(res.data.orders);
+      console.log(res.data);
     } catch (error) {
       console.log(error?.response);
       setLoading(false);
     }
   };
 
+  
+
+    // Fungsi untuk memperbarui status ke true
+    const updateStatus = async (id) => {
+      console.log(id)
+      const config = {
+        headers: {
+          access_token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGJjci5pbyIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTY2NTI0MjUwOX0.ZTx8L1MqJ4Az8KzoeYU2S614EQPnqk6Owv03PUSnkzc`,
+          }
+      };
+      const payload = {
+        status: id,
+      }
+      try {
+        const res = await axios.patch(`https://api-car-rental.binaracademy.org/admin/order/${id}`, payload, config);
+        getListOrder(currentPage, perPage);
+        handlePerRowsChange(perPage, currentPage);
+        console.log(res.data);
+      } catch (err) {
+          console.error('Error updating status:', err);
+      }
+  };
 
 
-  // Fungsi untuk memperbarui status ke true
-  const updateStatus = async (id) => {
-    console.log(id)
-    const config = {
-      headers: {
-        access_token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGJjci5pbyIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTY2NTI0MjUwOX0.ZTx8L1MqJ4Az8KzoeYU2S614EQPnqk6Owv03PUSnkzc`,
-        }
-    };
-    const payload = {
-      status: id,
-    }
-    try {
-      // eslint-disable-next-line no-unused-vars
-      const res = await axios.patch(`https://api-car-rental.binaracademy.org/admin/order/${id}`, payload, config);
-      getListOrder(currentPage, perPage);
-      handlePerRowsChange(perPage, currentPage);
-      // console.log(res.data);
-    } catch (err) {
-        console.error('Error updating status:', err);
-    }
-};
 
   const columns = [
     {
@@ -233,14 +245,12 @@ const DashboardPage = ({ onDateChange }) => {
     },
   ];
 
-
   useEffect(() => {
     getReportData();
     getListOrder(currentPage);
     updateStatus();
     
   }, [currentPage, dateRange, perPage, ]);
-
 
   const [dataReports, setDataReports] = useState([]);
 
@@ -374,7 +384,7 @@ const DashboardPage = ({ onDateChange }) => {
           hasil.totalNilai === 0 ? "" : `: ${hasil.totalNilai}`
         } `,
         floating: true,
-        offsetY: 250,
+        offsetY: 300,
         align: "center",
         style: {
           color: "#444",
@@ -383,6 +393,12 @@ const DashboardPage = ({ onDateChange }) => {
     },
   };
 
+  // const handleGetDateFrom = (e) => {
+  //   setDateFrom(e.target.value);
+  // };
+  // const handleGetDateUntil = (e) => {
+  //   setDateUntil(e.target.value);
+  // };
 
   return (
     <div className="flex">
@@ -505,9 +521,8 @@ const DashboardPage = ({ onDateChange }) => {
 
           {/* Main Content */}
           <div className={`w-full  bg-[#f5f6ff]`}>
-
-            {/* nav */}
-            <div className="flex gap-2 items-center pl-8 pt-5">
+           {/* nav */}
+           <div className="flex gap-2 items-center pl-8 pt-5">
               <p className="font-medium text-lg">
                 <p>Dashboard</p>
               </p>
@@ -516,7 +531,6 @@ const DashboardPage = ({ onDateChange }) => {
                 <p>Dashboard</p>
               </p>
             </div>
-
             {/* Header */}
             <div className="px-8 flex gap-2 items-center pt-14">
                   <span className="bg-[#0D28A6] w-[7px] h-[25px]"></span>
@@ -528,8 +542,8 @@ const DashboardPage = ({ onDateChange }) => {
                 <div className=" pt-10 gap-4 flex flex-col items-start w-11/12">
                   <p className=" font-medium">Month</p>
 
-                  {/* Date Range Picker */}
-                  <div className="flex">
+                   {/* Date Range Picker */}
+                   <div className="flex">
                     <div className="relative w-max">
                       <DatePicker
                         className=" border-2 p-2 outline-none rounded-sm w-[150px]"
@@ -547,7 +561,7 @@ const DashboardPage = ({ onDateChange }) => {
                   </div>
 
                   {/* Chart */}
-                  <div id="chart" className="w-full ">
+                  <div id="chart" className="w-full">
                     <Chart
                       options={OptionsColumChart.options}
                       series={OptionsColumChart.series}

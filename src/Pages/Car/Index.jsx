@@ -61,6 +61,12 @@ const CarPage = () => {
         setLocalSearchTerm(e.target.value);
     };
 
+    const handleClearSearch = () => {
+        setLocalSearchTerm('');
+        dispatch(setSearchTerm(''));
+        dispatch(setPage(1)); // Reset to the first page on new search
+    };
+
     const handleSearchSubmit = () => {
         dispatch(setSearchTerm(localSearchTerm));
         dispatch(setPage(1)); // Reset to the first page on new search
@@ -71,12 +77,6 @@ const CarPage = () => {
             e.preventDefault();
             handleSearchSubmit();
         }
-    };
-
-    const handleClearSearch = () => {
-        setLocalSearchTerm('');
-        dispatch(setSearchTerm(''));
-        dispatch(setPage(1)); // Reset to the first page on new search
     };
 
 
@@ -195,7 +195,9 @@ const CarPage = () => {
                                         onKeyPress={handleSearchKeyPress}
                                         className="border-[2px] bordder-[#999999] p-2 outline-none placeholder:pl-8"
                                         placeholder="Search"
+
                                     />
+                                    
                                     {
                                         localSearchTerm ? (
                                             <button
@@ -432,18 +434,7 @@ const CarPage = () => {
                             onPageChange={handlePageChange}
                         />
 
-                        {/* <div className={`flex justify-center gap-5 py-10 mr-[75px]`}>
-                            {Array.from({ length: totalPages }, (_, index) => (
-                                <button
-                                    className={`bg-[#ffffff] border p-2 px-5 rounded-sm font-medium text-sm ${currentPage === index + 1 ? 'bg-[#CFD4ED] border-[1px] border-blue-900' : 'opacity-40'}`}
-                                    key={index}
-                                    onClick={() => handlePageChange(index + 1)}
-                                    disabled={currentPage === index + 1}
-                                >
-                                    {index + 1}
-                                </button>
-                            ))}
-                        </div> */}
+
 
                     </div>
                 </div>
