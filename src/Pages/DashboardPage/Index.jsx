@@ -578,7 +578,7 @@ setDateRange({ start: formattedStartDate, end: formattedEndDate });
                     <span className="bg-[#0D28A6] w-[7px] h-[25px]"></span>
                     <h1 className="text-lg font-semibold ">List Order</h1>
                   </div>
-                  <div className="flex flex-col gap-10 items-center pt-5">
+                  <div id="table" className="flex flex-col gap-10 items-center pt-5">
                     <DataTable
                       columns={columns}
                       data={listOrder}

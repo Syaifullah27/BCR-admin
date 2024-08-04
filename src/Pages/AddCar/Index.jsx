@@ -121,6 +121,7 @@ const AddCarPage = () => {
             // console.log(res);
             showPopupMessage('Data Berhasil Disimpan');
             navigate("/car")
+            
         } catch (error) {
             console.log(error);
             showPopupMessage('Terjadi kesalahan saat menambahkan data mobil');
