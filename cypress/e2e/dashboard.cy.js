@@ -5,7 +5,7 @@ describe('template spec', () => {
   });
   it("should display the dashboard page", () => {
     
-    cy.get("input[type=text]").should("exist").and("be.visible");
+    cy.get("#table").should("exist").and("be.visible");
     // cy.get("input[type='password']").should("exist").and("be.visible").type("123456");
     // cy.get("button").should("exist").and("be.visible").click();
 

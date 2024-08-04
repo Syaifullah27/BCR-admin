@@ -120,7 +120,11 @@ const AddCarPage = () => {
             const res = await axios.post("https://api-car-rental.binaracademy.org/admin/car", formData, config)
             // console.log(res);
             showPopupMessage('Data Berhasil Disimpan');
+
             navigate("/car")
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
             
         } catch (error) {
             console.log(error);
