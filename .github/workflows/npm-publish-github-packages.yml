@@ -1,0 +1,51 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy to server
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Deploy to VPS
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: root
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          # Load NVM and ensure Node.js version is correct
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+          
+          nvm use 20.5.1
+
+          # Update PATH to include NVM binaries
+          export PATH=$PATH:$NVM_DIR/versions/node/v20.5.1/bin
+
+          # Debugging information
+          echo $PATH
+          which npm
+          which pm2
+
+          # Install PM2 if not already installed
+          if ! command -v pm2 &> /dev/null
+          then
+            npm install -g pm2
+          fi
+
+          # Commands
+          cd /root/repo/BCR-admin
+          git pull origin main
+          npm install
+          npm run build
+          pm2 restart all
+        debug: true
